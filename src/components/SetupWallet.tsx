@@ -20,7 +20,6 @@ import {
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import {
-  Landmark,
   Wallet,
   Coins,
   Plus,
