@@ -29,7 +29,6 @@ import {
   Copy,
 } from "lucide-react";
 import Notification from "./Notification";
-import ImportWalletDailog from "./AllDailogBox";
 import { generateRandom, getSolWallet } from "./scripts/solana";
 import { getEthWallet } from "./scripts/ether";
 import ShowKeys from "./ShowKeys";
@@ -284,34 +283,23 @@ export default function SetupWallet() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-web3-dark-primary dark:to-web3-dark-surface flex items-center justify-center p-4">
+    <div className="min-h-screen bg-white dark:bg-[#24242A] flex items-center justify-center p-4">
       
-      {/* Animated Background */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none opacity-20">
-        <div className="absolute top-1/3 left-1/4 w-96 h-96 bg-web3-gold/20 rounded-full blur-3xl animate-pulse-glow" />
-        <div className="absolute bottom-1/3 right-1/4 w-96 h-96 bg-web3-violet/20 rounded-full blur-3xl animate-pulse-glow" style={{ animationDelay: '1s' }} />
-      </div>
-
-      <Card className="w-full max-w-2xl glass-card relative z-10">
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-web3-gold via-web3-blue to-web3-violet" />
+      <Card className="w-full max-w-2xl bg-white dark:bg-[#1C1C1E] border border-gray-200 dark:border-[#3A3A3F] shadow-xl">
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-orange-400 to-orange-600" />
         
         <CardHeader className="text-center relative">
           <div className="flex justify-center mb-4">
-            <svg width="48" height="48" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M20 2L35 12V28L20 38L5 28V12L20 2Z" fill="url(#gold-gradient)" stroke="#F59E0B" strokeWidth="2"/>
-              <path d="M20 10L28 15V25L20 30L12 25V15L20 10Z" fill="#0A0B0F" stroke="#F59E0B" strokeWidth="1.5"/>
-              <defs>
-                <linearGradient id="gold-gradient" x1="5" y1="2" x2="35" y2="38" gradientUnits="userSpaceOnUse">
-                  <stop stopColor="#F59E0B"/>
-                  <stop offset="1" stopColor="#D97706"/>
-                </linearGradient>
-              </defs>
-            </svg>
+            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center">
+              <svg width="32" height="32" viewBox="0 0 40 40" fill="none">
+                <path d="M20 2L35 12V28L20 38L5 28V12L20 2Z" fill="white" />
+              </svg>
+            </div>
           </div>
-          <CardTitle className="text-3xl font-space font-bold text-gradient mb-2">
+          <CardTitle className="text-3xl font-bold mb-2">
             Aureus Wallet
           </CardTitle>
-          <CardDescription className="text-lg text-web3-muted dark:text-web3-muted">
+          <CardDescription className="text-lg">
             Your assets. Your keys. Your future.
           </CardDescription>
         </CardHeader>
@@ -320,10 +308,10 @@ export default function SetupWallet() {
           <div className="space-y-2">
             <Label
               htmlFor="nickname"
-              className="text-base font-medium text-web3-white dark:text-web3-white"
+              className="text-base font-medium"
             >
               Wallet Name
-              <span className="text-xs text-web3-muted ml-2">
+              <span className="text-xs text-gray-500 ml-2">
                 (Used as prefix for your wallets)
               </span>
             </Label>
@@ -332,30 +320,30 @@ export default function SetupWallet() {
               id="nickname"
               placeholder="Enter a name for your wallet"
               onChange={(e) => setNickname(e.target.value)}
-              className="bg-white/5 border-white/10 focus:border-web3-gold focus:ring-web3-gold text-web3-white placeholder:text-web3-muted"
+              className="bg-gray-50 dark:bg-[#1C1C1E] border-gray-300 dark:border-[#3A3A3F] focus:border-orange-500 focus:ring-orange-500"
             />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Button
               variant="outline"
-              className={`h-24 flex flex-col items-center justify-center glass hover:border-web3-gold/50 transition-all ${
-                walletType === "import" ? "ring-2 ring-web3-gold border-web3-gold" : ""
+              className={`h-24 flex flex-col items-center justify-center hover:border-orange-500/50 transition-all ${
+                walletType === "import" ? "ring-2 ring-orange-500 border-orange-500" : ""
               }`}
               onClick={() => handleWalletClick("import")}
             >
-              <Import className="h-8 w-8 mb-2 text-web3-gold" />
+              <Import className="h-8 w-8 mb-2 text-orange-500" />
               <span className="font-medium">Import Wallet</span>
             </Button>
 
             <Button
               variant="outline"
-              className={`h-24 flex flex-col items-center justify-center glass hover:border-web3-gold/50 transition-all ${
-                walletType === "add" ? "ring-2 ring-web3-gold border-web3-gold" : ""
+              className={`h-24 flex flex-col items-center justify-center hover:border-orange-500/50 transition-all ${
+                walletType === "add" ? "ring-2 ring-orange-500 border-orange-500" : ""
               }`}
               onClick={() => handleWalletClick("add")}
             >
-              <Plus className="h-8 w-8 mb-2 text-web3-gold" />
+              <Plus className="h-8 w-8 mb-2 text-orange-500" />
               <span className="font-medium">Create Wallet</span>
             </Button>
           </div>
@@ -364,28 +352,28 @@ export default function SetupWallet() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
               <Button
                 variant="outline"
-                className="h-24 flex flex-col items-center justify-center glass hover:border-ethereum/50 transition-all"
+                className="h-24 flex flex-col items-center justify-center hover:border-blue-500/50 transition-all"
                 onClick={() => handleAddWallet("ETH")}
               >
-                <Wallet className="h-8 w-8 mb-2 text-ethereum" />
+                <Wallet className="h-8 w-8 mb-2 text-blue-500" />
                 <span className="font-medium">Ethereum</span>
               </Button>
               
               <Button
                 variant="outline"
-                className="h-24 flex flex-col items-center justify-center glass hover:border-solana/50 transition-all"
+                className="h-24 flex flex-col items-center justify-center hover:border-purple-500/50 transition-all"
                 onClick={() => handleAddWallet("SOL")}
               >
-                <Coins className="h-8 w-8 mb-2 text-solana" />
+                <Coins className="h-8 w-8 mb-2 text-purple-500" />
                 <span className="font-medium">Solana</span>
               </Button>
               
               <Button
                 variant="outline"
-                className="h-24 flex flex-col items-center justify-center glass hover:border-web3-gold/50 transition-all"
+                className="h-24 flex flex-col items-center justify-center hover:border-orange-500/50 transition-all"
                 onClick={() => handleAddBoth("both")}
               >
-                <Plus className="h-8 w-8 mb-2 text-web3-gold" />
+                <Plus className="h-8 w-8 mb-2 text-orange-500" />
                 <span className="font-medium">Both Chains</span>
               </Button>
             </div>
@@ -442,7 +430,7 @@ export default function SetupWallet() {
           {showProceed && (
             <Button
               onClick={handleProceed}
-              className="mt-4 glow-button w-full py-6 text-lg"
+              className="mt-4 bg-orange-500 hover:bg-orange-600 text-white w-full py-6 text-lg"
             >
               {isProceeding ? (
                 <div className="flex items-center justify-center">
@@ -462,16 +450,52 @@ export default function SetupWallet() {
         </CardFooter>
       </Card>
 
-      {/* Import wallet s */}
-
-      <ImportWalletDailog
-        showImport={showImport}
-        handleImportSubmit={handleImportSubmit}
-        isProcessing={isProcessing}
-        setShowImport={setShowImport}
-        publicKey={publicKey}
-        setPublicKey={setPublicKey}
-      />
+      {/* Import wallet dialog */}
+      <Dialog open={showImport} onOpenChange={setShowImport}>
+        <DialogContent className="sm:max-w-[425px] bg-white dark:bg-[#24242A] border border-gray-200 dark:border-[#3A3A3F]">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-semibold">
+              Import Wallet
+            </DialogTitle>
+            <DialogDescription>
+              Enter your secret recovery phrase to import your wallet.
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleImportSubmit}>
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label htmlFor="import-phrase">
+                  Secret Recovery Phrase
+                </Label>
+                <Input
+                  id="import-phrase"
+                  placeholder="Enter your 12-word phrase"
+                  value={publicKey}
+                  onChange={(e) => setPublicKey(e.target.value)}
+                  className="bg-gray-50 dark:bg-[#1C1C1E] border-gray-300 dark:border-[#3A3A3F] focus:border-orange-500 focus:ring-orange-500"
+                  required
+                />
+              </div>
+            </div>
+            <div className="flex justify-end gap-3">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setShowImport(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                disabled={isProcessing}
+                className="bg-orange-500 hover:bg-orange-600 text-white"
+              >
+                {isProcessing ? "Importing..." : "Import Wallet"}
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
 
       {/* show all Wallets modal */}
 
@@ -508,12 +532,12 @@ export default function SetupWallet() {
       </Dialog>
 
       <Dialog open={showSecretPhrase} onOpenChange={setShowSecretPhrase}>
-        <DialogContent className="sm:max-w-[550px] glass-card border-web3-gold/20">
+        <DialogContent className="sm:max-w-[550px] bg-white dark:bg-[#24242A] border border-orange-500/20">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-space font-semibold text-web3-white">
+            <DialogTitle className="text-2xl font-semibold">
               Your Secret Recovery Phrase
             </DialogTitle>
-            <DialogDescription className="text-web3-muted">
+            <DialogDescription>
               Write down these 12 words in order and store them safely. Never share them with anyone.
             </DialogDescription>
           </DialogHeader>
@@ -521,10 +545,10 @@ export default function SetupWallet() {
             {secretPhrase.split(" ").map((word, index) => (
               <div
                 key={index}
-                className="bg-white/5 border border-white/10 p-3 rounded-lg text-center hover:border-web3-gold/50 transition-colors"
+                className="bg-gray-50 dark:bg-[#1C1C1E] border border-gray-300 dark:border-[#3A3A3F] p-3 rounded-lg text-center hover:border-orange-500/50 transition-colors"
               >
-                <span className="text-xs text-web3-muted block mb-1">{index + 1}</span>
-                <span className="font-medium text-web3-white">{word}</span>
+                <span className="text-xs text-gray-500 block mb-1">{index + 1}</span>
+                <span className="font-medium">{word}</span>
               </div>
             ))}
           </div>
@@ -538,14 +562,14 @@ export default function SetupWallet() {
                 );
               }}
               variant="outline"
-              className="flex items-center glass hover:border-web3-gold/50"
+              className="flex items-center hover:border-orange-500/50"
             >
               <Copy className="mr-2 h-4 w-4" />
               Copy Phrase
             </Button>
             <Button
               onClick={handleSecretPhraseSaved}
-              className="glow-button"
+              className="bg-orange-500 hover:bg-orange-600 text-white"
             >
               I've Saved My Phrase
             </Button>
