@@ -1,25 +1,19 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Wallet,
   ArrowUpRight,
   ArrowDownLeft,
-  BarChart3,
   Copy,
   Check,
+  Settings,
+  ChevronDown,
+  Eye,
+  EyeOff,
   X,
-  TrendingUp,
 } from "lucide-react";
 import ReceiveCrypto from "./ReceiveCrypto";
 import SendCrypto from "./SendCrypto";
 import ShowKeys from "./ShowKeys";
-import {
-  CryptoRow,
-  DashboardCard,
-  Transaction,
-  QuickActionButton,
-} from "./DashboardComponents";
-import { WalletHeader } from "./WalletHeader";
 import { AirdropPanel } from "./AirdropPanel";
 import { NotificationContainer } from "./NotificationContainer";
 import { useNotifications } from "../hooks/useNotifications";
@@ -72,6 +66,7 @@ export default function Component() {
   const [nickname, setNickname] = useState("");
   const [multipleWallets, setMultipleWallets] = useState(false);
   const [multiWalletKeys, setMultiWalletKeys] = useState<MultiWalletKeys | null>(null);
+  const [showBalance, setShowBalance] = useState(true);
 
   const { notifications, addNotification } = useNotifications();
   
@@ -80,10 +75,8 @@ export default function Component() {
     selectedCurrency,
     multipleWallets,
     multiWalletKeys,
-    pollingInterval: 10000, // 10 seconds instead of 1 second
+    pollingInterval: 10000,
   });
-
-  const toggleDarkMode = () => setDarkMode(!darkMode);
 
   useEffect(() => {
     // If user directly tries to access the dashboard without giving accounts and stuff
@@ -203,266 +196,204 @@ export default function Component() {
       }
     }
   };
+
+  const getTokenBalance = (currency: string) => {
+    if (currency === "ETH") return balances.eth ?? 0;
+    if (currency === "SOL") return balances.sol ?? 0;
+    return 0;
+  };
+
+  const getTokenValue = (currency: string) => {
+    if (currency === "ETH") {
+      return balances.eth ? (balances.eth * 3562.38).toFixed(2) : "0.00";
+    }
+    if (currency === "SOL") {
+      return balances.sol ? (balances.sol * 210.41).toFixed(2) : "0.00";
+    }
+    return "0.00";
+  };
+
   return (
     <div className={`min-h-screen ${darkMode ? "dark" : ""}`}>
-      <div className="bg-gradient-to-b from-gray-50 to-white dark:from-web3-dark-primary dark:to-web3-dark-surface text-gray-900 dark:text-web3-white transition-colors duration-300">
+      <div className="bg-gray-50 dark:bg-[#1C1C1E] text-gray-900 dark:text-white transition-colors duration-300">
         
-        {/* Animated Background */}
-        <div className="fixed inset-0 overflow-hidden pointer-events-none opacity-20">
-          <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-web3-gold/20 rounded-full blur-3xl animate-pulse-glow" />
-          <div className="absolute bottom-1/3 left-1/3 w-96 h-96 bg-web3-blue/20 rounded-full blur-3xl animate-pulse-glow" style={{ animationDelay: '1s' }} />
-        </div>
+        {/* MetaMask-style Container */}
+        <div className="max-w-md mx-auto min-h-screen bg-white dark:bg-[#24242A] shadow-2xl">
+          
+          {/* Header */}
+          <div className="bg-white dark:bg-[#24242A] border-b border-gray-200 dark:border-[#3A3A3F] px-4 py-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center">
+                  <svg width="20" height="20" viewBox="0 0 40 40" fill="none">
+                    <path d="M20 2L35 12V28L20 38L5 28V12L20 2Z" fill="white" />
+                  </svg>
+                </div>
+                <div>
+                  <div className="flex items-center space-x-1">
+                    <span className="text-sm font-medium">{nickname || "Account 1"}</span>
+                    <ChevronDown className="h-3 w-3 text-gray-500" />
+                  </div>
+                  <div className="flex items-center space-x-1">
+                    <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                    <span className="text-xs text-gray-500 capitalize">{selectedNetwork}</span>
+                  </div>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowKeysModal(true)}
+                className="p-2 hover:bg-gray-100 dark:hover:bg-[#3A3A3F] rounded-full transition-colors"
+              >
+                <Settings className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+              </button>
+            </div>
 
-        <WalletHeader 
-          darkMode={darkMode} 
-          toggleDarkMode={toggleDarkMode}
-          onShowKeys={() => setShowKeysModal(true)}
-        />
-        <main className="container mx-auto px-4 py-8 relative z-10">
-          <motion.div
-            className="mb-8"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <h1 className="text-4xl font-space font-bold mb-2">Dashboard</h1>
-            <p className="text-web3-muted">Manage your digital assets</p>
-          </motion.div>
-
-          <div className="mb-8 glass-card p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div className="flex items-center space-x-3 flex-1 min-w-0">
-              <span className="text-sm font-medium text-web3-muted flex-shrink-0">Wallet:</span>
-              <span className="text-sm font-mono bg-white/5 rounded px-3 py-1 truncate">
-                {publicKey ? `${publicKey.slice(0, 8)}...${publicKey.slice(-8)}` : "No wallet"}
+            {/* Address Bar */}
+            <div className="mt-3 flex items-center justify-center space-x-2 bg-gray-100 dark:bg-[#1C1C1E] rounded-full px-3 py-2">
+              <span className="text-xs font-mono text-gray-600 dark:text-gray-400">
+                {publicKey ? `${publicKey.slice(0, 6)}...${publicKey.slice(-4)}` : "No wallet"}
               </span>
               <button
                 onClick={copyPublicKey}
-                className="text-web3-gold hover:text-web3-gold/80 transition-colors flex-shrink-0"
-                aria-label="Copy public key"
+                className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
               >
-                {copiedPublicKey ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                {copiedPublicKey ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
               </button>
             </div>
-            <div className="flex items-center space-x-3">
-              <span className="text-sm font-medium text-web3-muted">Network:</span>
+          </div>
+
+          {/* Balance Section */}
+          <div className="px-4 py-6 text-center bg-gradient-to-b from-white to-gray-50 dark:from-[#24242A] dark:to-[#1C1C1E]">
+            <div className="flex items-center justify-center mb-2">
+              <button
+                onClick={() => setShowBalance(!showBalance)}
+                className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+              >
+                {showBalance ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
+              </button>
+            </div>
+            
+            {selectedCurrency ? (
+              <>
+                <div className="text-4xl font-bold mb-1">
+                  {showBalance ? `${getTokenBalance(selectedCurrency)} ${selectedCurrency}` : "••••••"}
+                </div>
+                <div className="text-gray-500 text-sm">
+                  {showBalance ? `$${getTokenValue(selectedCurrency)}` : "••••••"}
+                </div>
+              </>
+            ) : (
+              <div className="text-gray-500 text-sm">Select a token below</div>
+            )}
+          </div>
+
+          {/* Action Buttons */}
+          <div className="px-4 pb-4 flex gap-3">
+            <button
+              onClick={() => setSendModalOpen(true)}
+              disabled={!selectedCurrency}
+              className="flex-1 flex flex-col items-center justify-center py-3 bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-lg transition-colors"
+            >
+              <ArrowUpRight className="h-5 w-5 mb-1" />
+              <span className="text-sm font-medium">Send</span>
+            </button>
+            <button
+              onClick={() => setReceiveModalOpen(true)}
+              className="flex-1 flex flex-col items-center justify-center py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors"
+            >
+              <ArrowDownLeft className="h-5 w-5 mb-1" />
+              <span className="text-sm font-medium">Receive</span>
+            </button>
+            <button
+              onClick={() => alertMessage()}
+              className="flex-1 flex flex-col items-center justify-center py-3 border border-orange-500 text-orange-500 hover:bg-orange-50 dark:hover:bg-[#3A3A3F] rounded-lg transition-colors"
+            >
+              <svg className="h-5 w-5 mb-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M7 16V4M7 4L3 8M7 4L11 8M17 8V20M17 20L21 16M17 20L13 16" />
+              </svg>
+              <span className="text-sm font-medium">Swap</span>
+            </button>
+          </div>
+
+          {/* Network Selector */}
+          {multipleWallets && (
+            <div className="px-4 pb-4">
               <select
                 value={selectedNetwork}
                 onChange={(e) => setSelectedNetwork(e.target.value)}
-                className="text-sm bg-white/5 border border-white/10 rounded-lg px-3 py-1 focus:outline-none focus:ring-2 focus:ring-web3-gold"
-                aria-label="Select network"
+                className="w-full px-4 py-2 bg-gray-100 dark:bg-[#1C1C1E] border border-gray-300 dark:border-[#3A3A3F] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
               >
-                <option value="mainnet">Mainnet</option>
+                <option value="mainnet">Ethereum Mainnet</option>
                 <option value="devnet">Devnet</option>
               </select>
             </div>
-          </div>
-
-          {/* Airdrop Section */}
-          <AirdropPanel
-            publicKey={publicKey}
-            selectedNetwork={selectedNetwork}
-            selectedCurrency={selectedCurrency}
-            onSuccess={(msg) => addNotification("success", msg)}
-            onError={(msg) => addNotification("error", msg)}
-          />
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <DashboardCard
-              title="Total Balance"
-              value="$24,567.89"
-              icon={<Wallet className="h-6 w-6" />}
-            />
-            <DashboardCard
-              title="24h Change"
-              value="+5.67%"
-              icon={<TrendingUp className="h-6 w-6" />}
-            />
-            <DashboardCard
-              title="Active Assets"
-              value="4"
-              icon={<BarChart3 className="h-6 w-6" />}
-            />
-          </div>
-
-          {/* Selected Currency Balance */}
-          {selectedCurrency && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 20 }}
-              className="mb-8 glass-card p-6"
-            >
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-2xl font-space font-bold">{selectedCurrency} Wallet</h2>
-                <span className={selectedCurrency === "SOL" ? "chain-badge-sol" : "chain-badge-eth"}>
-                  {selectedCurrency}
-                </span>
-              </div>
-              <p className="text-4xl font-space font-bold text-web3-gold mb-2">
-                {selectedCurrency === "ETH" ? balances.eth ?? 0 : balances.sol ?? 0} {selectedCurrency}
-              </p>
-              <p className="text-lg text-web3-muted">
-                ≈ $
-                {selectedCurrency === "ETH"
-                  ? balances.eth
-                    ? (balances.eth * 3562.38).toFixed(2)
-                    : "0.00"
-                  : balances.sol
-                  ? (balances.sol * 210.41).toFixed(2)
-                  : "0.00"}
-              </p>
-            </motion.div>
           )}
 
-          {/* Holdings and Transactions */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2">
-              <h2 className="text-2xl font-space font-bold mb-4">Your Assets</h2>
-              <div className="glass-card p-6">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b border-white/10">
-                      <th className="text-left pb-4 text-sm font-medium text-web3-muted">Asset</th>
-                      <th className="text-right pb-4 text-sm font-medium text-web3-muted">Balance</th>
-                      <th className="text-right pb-4 text-sm font-medium text-web3-muted">Value</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <CryptoRow
-                      name="Bitcoin"
-                      type="BTC"
-                      iconPath="/LogoWallets/Bitcoin.png"
-                      balance="0.5"
-                      value="$2,500,000"
-                      onClick={() => handleCurrencyChange("BTC")}
-                    />
-                    <CryptoRow
-                      name="Ethereum"
-                      type="ETH"
-                      iconPath="/LogoWallets/ethereum.png"
-                      balance={balances.eth ?? 0}
-                      value="$1,000,000"
-                      onClick={() => handleCurrencyChange("ETH")}
-                    />
-                    <CryptoRow
-                      name="Solana"
-                      type="SOL"
-                      iconPath="/LogoWallets/Solana_logo.png"
-                      balance={balances.sol ?? 0}
-                      value="$500,000"
-                      onClick={() => handleCurrencyChange("SOL")}
-                    />
-                    <CryptoRow
-                      name="Ripple"
-                      type="XRP"
-                      iconPath="/LogoWallets/ripple.png"
-                      balance="1000"
-                      value="$50,000"
-                      onClick={() => handleCurrencyChange("XRP")}
-                    />
-                  </tbody>
-                </table>
-              </div>
+          {/* Airdrop Section - Compact */}
+          {selectedNetwork === "devnet" && (
+            <div className="px-4 pb-4">
+              <AirdropPanel
+                publicKey={publicKey}
+                selectedNetwork={selectedNetwork}
+                selectedCurrency={selectedCurrency}
+                onSuccess={(msg) => addNotification("success", msg)}
+                onError={(msg) => addNotification("error", msg)}
+              />
             </div>
+          )}
 
-            <div>
-              <h2 className="text-2xl font-space font-bold mb-4">Recent Activity</h2>
-              <div className="glass-card p-6 space-y-3">
-                <Transaction
-                  type="sent"
-                  amount="0.1 BTC"
-                  recipient="0x1234...5678"
-                  sender="0xabcd...efgh"
-                />
-                <Transaction
-                  type="received"
-                  amount="100 XRP"
-                  recipient="0x1234...5678"
-                  sender="0xabcd...efgh"
-                />
-                <Transaction
-                  type="sent"
-                  amount="1.5 ETH"
-                  recipient="0x9876...5432"
-                  sender="0x1234...5678"
-                />
-              </div>
+          {/* Tabs */}
+          <div className="border-t border-b border-gray-200 dark:border-[#3A3A3F]">
+            <div className="flex">
+              <button className="flex-1 px-4 py-3 text-sm font-medium text-orange-500 border-b-2 border-orange-500">
+                Assets
+              </button>
+              <button 
+                onClick={() => alertMessage("Activity view coming soon")}
+                className="flex-1 px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+              >
+                Activity
+              </button>
             </div>
           </div>
 
-          {/* Quick Actions */}
-          <div className="mt-8">
-            <h2 className="text-2xl font-space font-bold mb-4">Quick Actions</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              <QuickActionButton
-                label="Send"
-                icon={<ArrowUpRight className="h-6 w-6" />}
-                onClick={() => setSendModalOpen(true)}
-              />
-              <QuickActionButton
-                label="Receive"
-                icon={<ArrowDownLeft className="h-6 w-6" />}
-                onClick={() => setReceiveModalOpen(true)}
-              />
-              <QuickActionButton
-                label="Swap"
-                icon={<ArrowUpRight className="h-6 w-6 transform rotate-90" />}
-                onClick={() => alertMessage()}
-              />
-              <QuickActionButton
-                label="Buy"
-                icon={<Wallet className="h-6 w-6" />}
-                onClick={() => alertMessage()}
-              />
-            </div>
+          {/* Assets List */}
+          <div className="px-4 py-2">
+            {[
+              { name: "Ethereum", symbol: "ETH", balance: balances.eth ?? 0, icon: "/LogoWallets/ethereum.png", value: getTokenValue("ETH") },
+              { name: "Solana", symbol: "SOL", balance: balances.sol ?? 0, icon: "/LogoWallets/Solana_logo.png", value: getTokenValue("SOL") },
+            ].map((token) => (
+              <button
+                key={token.symbol}
+                onClick={() => handleCurrencyChange(token.symbol)}
+                className={`w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-[#3A3A3F] transition-colors ${
+                  selectedCurrency === token.symbol ? "bg-gray-100 dark:bg-[#3A3A3F]" : ""
+                }`}
+              >
+                <div className="flex items-center space-x-3">
+                  <img src={token.icon} alt={token.name} className="w-8 h-8 rounded-full" />
+                  <div className="text-left">
+                    <div className="text-sm font-medium">{token.balance} {token.symbol}</div>
+                    <div className="text-xs text-gray-500">{token.name}</div>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="text-sm font-medium">${token.value}</div>
+                </div>
+              </button>
+            ))}
+            
+            <button
+              onClick={() => alertMessage("Import tokens feature coming soon")}
+              className="w-full mt-4 py-3 text-sm text-orange-500 font-medium hover:bg-gray-50 dark:hover:bg-[#3A3A3F] rounded-lg transition-colors"
+            >
+              + Import tokens
+            </button>
           </div>
-        </main>
-        {/* Footer */}
-        <footer className="border-t border-gray-200 dark:border-white/10 bg-white/50 dark:bg-web3-dark-surface/50 backdrop-blur-sm py-8 mt-12 relative z-10">
-          <div className="container mx-auto px-4">
-            <div className="flex flex-col md:flex-row justify-between items-center">
-              <div className="flex items-center space-x-3 mb-4 md:mb-0">
-                <svg width="24" height="24" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M20 2L35 12V28L20 38L5 28V12L20 2Z" fill="url(#gold-gradient-footer)" stroke="#F59E0B" strokeWidth="2"/>
-                  <path d="M20 10L28 15V25L20 30L12 25V15L20 10Z" fill="#0A0B0F" stroke="#F59E0B" strokeWidth="1.5"/>
-                  <defs>
-                    <linearGradient id="gold-gradient-footer" x1="5" y1="2" x2="35" y2="38" gradientUnits="userSpaceOnUse">
-                      <stop stopColor="#F59E0B"/>
-                      <stop offset="1" stopColor="#D97706"/>
-                    </linearGradient>
-                  </defs>
-                </svg>
-                <span className="text-xl font-space font-bold text-gradient">Aureus</span>
-                <span className="text-sm text-web3-muted">by</span>
-                <a
-                  href="https://github.com/SheerWill007"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm font-semibold text-web3-gold hover:text-web3-gold/80 transition-colors"
-                >
-                  SheerWill007
-                </a>
-              </div>
-              <nav className="flex flex-wrap justify-center gap-4 mb-4 md:mb-0 text-sm text-web3-muted">
-                <button onClick={() => alertMessage("Feature coming soon")} className="hover:text-web3-gold transition-colors">
-                  Privacy Policy
-                </button>
-                <button onClick={() => alertMessage("Feature coming soon")} className="hover:text-web3-gold transition-colors">
-                  Terms of Service
-                </button>
-                <a
-                  href="mailto:manashpratimbhuyan8134@gmail.com"
-                  className="hover:text-web3-gold transition-colors"
-                >
-                  Contact
-                </a>
-              </nav>
-              <p className="text-sm text-web3-muted">
-                © 2024 Aureus. All rights reserved.
-              </p>
-            </div>
-          </div>
-        </footer>
+
+        </div>
+        
+
 
         {/* Notification Container */}
         <NotificationContainer notifications={notifications} />
@@ -474,19 +405,19 @@ export default function Component() {
               initial={{ opacity: 0, x: 100 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 100 }}
-              className="fixed top-6 right-6 glass-card p-4 z-50 max-w-sm"
+              className="fixed top-6 right-6 bg-white dark:bg-[#24242A] border border-gray-200 dark:border-[#3A3A3F] rounded-lg shadow-lg p-4 z-50 max-w-sm"
             >
               <button
-                className="absolute top-2 right-2 text-web3-muted hover:text-web3-white transition-colors"
+                className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
                 onClick={() => setShowWelcome(false)}
                 aria-label="Close welcome notification"
               >
                 <X className="h-4 w-4" />
               </button>
-              <p className="text-lg font-space font-semibold mb-1">
+              <p className="text-lg font-semibold mb-1">
                 Welcome, {nickname}!
               </p>
-              <p className="text-sm text-web3-muted">
+              <p className="text-sm text-gray-500">
                 Your wallet is ready. Start managing your digital assets securely.
               </p>
             </motion.div>
@@ -512,12 +443,12 @@ export default function Component() {
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 50 }}
-              className="fixed bottom-6 right-6 glass-card p-4 z-50 border-green-500/50"
+              className="fixed bottom-6 right-6 bg-white dark:bg-[#24242A] border border-green-500 rounded-lg shadow-lg p-4 z-50"
             >
-              <p className="text-lg font-space font-semibold text-green-500 mb-1">
+              <p className="text-lg font-semibold text-green-500 mb-1">
                 Transaction Completed
               </p>
-              <p className="text-sm text-web3-muted">
+              <p className="text-sm text-gray-500">
                 Your transaction has been processed successfully.
               </p>
             </motion.div>
