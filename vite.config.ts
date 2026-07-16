@@ -16,8 +16,8 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     sourcemap: false,
-    minify: 'esbuild', // Use esbuild instead of terser (faster, no extra dependency)
-    target: 'es2015',
+    minify: 'esbuild',
+    target: 'es2020', // Changed from es2015 to support BigInt
     rollupOptions: {
       output: {
         manualChunks: {
