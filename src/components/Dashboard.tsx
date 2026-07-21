@@ -18,6 +18,8 @@ import { AirdropPanel } from "./AirdropPanel";
 import { NotificationContainer } from "./NotificationContainer";
 import { useNotifications } from "../hooks/useNotifications";
 import { useWalletBalance, MultiWalletKeys } from "../hooks/useWalletBalance";
+import ActivityList from "./ActivityList";
+import NetworkSelector, { type Network } from "./NetworkSelector";
 
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -53,7 +55,14 @@ export default function Component() {
 
   const [darkMode, setDarkMode] = useState(false);
   const [selectedCurrency, setSelectedCurrency] = useState("");
-  const [selectedNetwork, setSelectedNetwork] = useState("mainnet");
+  const [selectedNetwork, setSelectedNetwork] = useState<Network>({
+    id: "eth-mainnet",
+    name: "Ethereum Mainnet",
+    chainId: "1",
+    icon: "/LogoWallets/ethereum.png",
+    rpcUrl: "https://mainnet.infura.io/v3/",
+    type: "mainnet",
+  });
   const [showWelcome, setShowWelcome] = useState(true);
   const [copiedPublicKey, setCopiedPublicKey] = useState(false);
   const [sendModalOpen, setSendModalOpen] = useState(false);
@@ -67,6 +76,7 @@ export default function Component() {
   const [multipleWallets, setMultipleWallets] = useState(false);
   const [multiWalletKeys, setMultiWalletKeys] = useState<MultiWalletKeys | null>(null);
   const [showBalance, setShowBalance] = useState(true);
+  const [activeTab, setActiveTab] = useState<"assets" | "activity">("assets");
 
   const { notifications, addNotification } = useNotifications();
   
@@ -316,25 +326,23 @@ export default function Component() {
           </div>
 
           {/* Network Selector */}
-          {multipleWallets && (
-            <div className="px-4 pb-4">
-              <select
-                value={selectedNetwork}
-                onChange={(e) => setSelectedNetwork(e.target.value)}
-                className="w-full px-4 py-2 bg-gray-100 dark:bg-[#1C1C1E] border border-gray-300 dark:border-[#3A3A3F] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
-              >
-                <option value="mainnet">Ethereum Mainnet</option>
-                <option value="devnet">Devnet</option>
-              </select>
-            </div>
-          )}
+          <div className="px-4 pb-4">
+            <NetworkSelector
+              selectedNetwork={selectedNetwork}
+              onSelectNetwork={(network) => {
+                setSelectedNetwork(network);
+                addNotification("success", `Switched to ${network.name}`);
+              }}
+              onAddNetwork={() => alertMessage("Add custom network feature coming soon")}
+            />
+          </div>
 
           {/* Airdrop Section - Compact */}
-          {selectedNetwork === "devnet" && (
+          {selectedNetwork.type === "testnet" && (
             <div className="px-4 pb-4">
               <AirdropPanel
                 publicKey={publicKey}
-                selectedNetwork={selectedNetwork}
+                selectedNetwork={selectedNetwork.type}
                 selectedCurrency={selectedCurrency}
                 onSuccess={(msg) => addNotification("success", msg)}
                 onError={(msg) => addNotification("error", msg)}
@@ -345,51 +353,68 @@ export default function Component() {
           {/* Tabs */}
           <div className="border-t border-b border-gray-200 dark:border-[#3A3A3F]">
             <div className="flex">
-              <button className="flex-1 px-4 py-3 text-sm font-medium text-orange-500 border-b-2 border-orange-500">
+              <button
+                onClick={() => setActiveTab("assets")}
+                className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${
+                  activeTab === "assets"
+                    ? "text-orange-500 border-b-2 border-orange-500"
+                    : "text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                }`}
+              >
                 Assets
               </button>
-              <button 
-                onClick={() => alertMessage("Activity view coming soon")}
-                className="flex-1 px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+              <button
+                onClick={() => setActiveTab("activity")}
+                className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${
+                  activeTab === "activity"
+                    ? "text-orange-500 border-b-2 border-orange-500"
+                    : "text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                }`}
               >
                 Activity
               </button>
             </div>
           </div>
 
-          {/* Assets List */}
-          <div className="px-4 py-2">
-            {[
-              { name: "Ethereum", symbol: "ETH", balance: balances.eth ?? 0, icon: "/LogoWallets/ethereum.png", value: getTokenValue("ETH") },
-              { name: "Solana", symbol: "SOL", balance: balances.sol ?? 0, icon: "/LogoWallets/Solana_logo.png", value: getTokenValue("SOL") },
-            ].map((token) => (
-              <button
-                key={token.symbol}
-                onClick={() => handleCurrencyChange(token.symbol)}
-                className={`w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-[#3A3A3F] transition-colors ${
-                  selectedCurrency === token.symbol ? "bg-gray-100 dark:bg-[#3A3A3F]" : ""
-                }`}
-              >
-                <div className="flex items-center space-x-3">
-                  <img src={token.icon} alt={token.name} className="w-8 h-8 rounded-full" />
-                  <div className="text-left">
-                    <div className="text-sm font-medium">{token.balance} {token.symbol}</div>
-                    <div className="text-xs text-gray-500">{token.name}</div>
+          {/* Tab Content */}
+          {activeTab === "assets" ? (
+            /* Assets List */
+            <div className="px-4 py-2">
+              {[
+                { name: "Ethereum", symbol: "ETH", balance: balances.eth ?? 0, icon: "/LogoWallets/ethereum.png", value: getTokenValue("ETH") },
+                { name: "Solana", symbol: "SOL", balance: balances.sol ?? 0, icon: "/LogoWallets/Solana_logo.png", value: getTokenValue("SOL") },
+              ].map((token) => (
+                <button
+                  key={token.symbol}
+                  onClick={() => handleCurrencyChange(token.symbol)}
+                  className={`w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-[#3A3A3F] transition-colors ${
+                    selectedCurrency === token.symbol ? "bg-gray-100 dark:bg-[#3A3A3F]" : ""
+                  }`}
+                >
+                  <div className="flex items-center space-x-3">
+                    <img src={token.icon} alt={token.name} className="w-8 h-8 rounded-full" />
+                    <div className="text-left">
+                      <div className="text-sm font-medium">{token.balance} {token.symbol}</div>
+                      <div className="text-xs text-gray-500">{token.name}</div>
+                    </div>
                   </div>
-                </div>
-                <div className="text-right">
-                  <div className="text-sm font-medium">${token.value}</div>
-                </div>
+                  <div className="text-right">
+                    <div className="text-sm font-medium">${token.value}</div>
+                  </div>
+                </button>
+              ))}
+              
+              <button
+                onClick={() => alertMessage("Import tokens feature coming soon")}
+                className="w-full mt-4 py-3 text-sm text-orange-500 font-medium hover:bg-gray-50 dark:hover:bg-[#3A3A3F] rounded-lg transition-colors"
+              >
+                + Import tokens
               </button>
-            ))}
-            
-            <button
-              onClick={() => alertMessage("Import tokens feature coming soon")}
-              className="w-full mt-4 py-3 text-sm text-orange-500 font-medium hover:bg-gray-50 dark:hover:bg-[#3A3A3F] rounded-lg transition-colors"
-            >
-              + Import tokens
-            </button>
-          </div>
+            </div>
+          ) : (
+            /* Activity List */
+            <ActivityList publicKey={publicKey} selectedCurrency={selectedCurrency} />
+          )}
 
         </div>
         
