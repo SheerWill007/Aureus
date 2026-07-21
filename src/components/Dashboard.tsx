@@ -246,7 +246,7 @@ export default function Component() {
                   </div>
                   <div className="flex items-center space-x-1">
                     <div className="w-2 h-2 rounded-full bg-green-500"></div>
-                    <span className="text-xs text-gray-500 capitalize">{selectedNetwork}</span>
+                    <span className="text-xs text-gray-500 capitalize">{selectedNetwork.name}</span>
                   </div>
                 </div>
               </div>
