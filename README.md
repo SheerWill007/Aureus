@@ -1,268 +1,149 @@
-# Aureus Wallet
+# 🥝 Kiwi Wallet
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/SheerWill007/aureus)
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](https://github.com/SheerWill007/aureus)
+**The freshest way to manage your crypto.**
 
-A modern, MetaMask-inspired cryptocurrency wallet built with React, TypeScript, and Tailwind CSS. Support for Ethereum and Solana networks with a clean, professional interface.
+Kiwi is a modern, secure, and delightfully simple cryptocurrency wallet for managing Ethereum and Solana assets. Built with React, TypeScript, and Tailwind CSS, Kiwi brings a refreshing approach to Web3 with bank-level security and an intuitive interface.
 
-🔗 **[Live Demo](https://aureus.vercel.app)** | 📚 **[Documentation](./DEPLOYMENT.md)** | 🚀 **[Quick Start](./QUICKSTART.md)**
-
----
+![Kiwi Wallet](https://img.shields.io/badge/version-3.0.0-brightgreen?style=for-the-badge)
+![License](https://img.shields.io/badge/license-MIT-lime?style=for-the-badge)
+![React](https://img.shields.io/badge/React-18.3-61DAFB?style=for-the-badge&logo=react)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.5-3178C6?style=for-the-badge&logo=typescript)
 
 ## ✨ Features
 
-- **Multi-Chain Support**: Manage Ethereum and Solana assets from a single interface
-- **MetaMask-Style Design**: Clean, professional UI inspired by MetaMask
-- **Secure**: Non-custodial wallet - you control your private keys
-- **Network Switching**: Easy switching between Mainnet and Devnet
-- **Send & Receive**: Transfer crypto with a simple, intuitive interface
-- **Balance Visibility Toggle**: Show/hide your balance for privacy
-- **Airdrop Support**: Request testnet tokens on Devnet
-- **Dark Mode**: Full dark mode support
-- **Responsive**: Works on desktop and mobile devices
+- 🔐 **Non-Custodial** - Your keys, your crypto. Always.
+- ⚡ **Multi-Chain Support** - Ethereum & Solana in one place
+- 🎨 **Beautiful UI** - Clean, modern design with dark mode
+- 🚀 **Lightning Fast** - Instant transactions and real-time updates
+- 📱 **Responsive** - Works seamlessly on desktop and mobile
+- 🔒 **Secure** - Military-grade encryption and local key storage
+- 🌐 **Network Switching** - Easy testnet/mainnet toggling
+- 💸 **Send & Receive** - Simple crypto transfers
+- 📊 **Activity History** - Track all your transactions
+- 🎯 **Multiple Accounts** - Manage multiple wallets easily
 
----
-
-## 🚀 Quick Deploy
-
-### One-Click Deployment
-
-Click one of the buttons below to deploy instantly:
-
-- **Vercel**: [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/SheerWill007/aureus)
-- **Netlify**: [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start)
-
-### Manual Deployment
-
-See detailed instructions in [DEPLOYMENT.md](./DEPLOYMENT.md)
-
-------
-
-## 🛠️ Tech Stack
-
-- **React** 18.3.1 - UI framework
-- **TypeScript** 5.5.3 - Type safety
-- **Tailwind CSS** 3.4.10 - Styling
-- **Vite** 5.4.1 - Build tool
-- **Framer Motion** 11.3.29 - Animations
-- **@solana/web3.js** 1.95.3 - Solana blockchain interaction
-- **ethers.js** 6.13.2 - Ethereum blockchain interaction
-- **shadcn/ui** - UI components
-
----
-
-## 📦 Getting Started
+## 🚀 Quick Start
 
 ### Prerequisites
 
-- Node.js 18+ 
-- npm or yarn
+- Node.js 18+ and npm/yarn
+- Git
 
 ### Installation
 
 ```bash
 # Clone the repository
-git clone https://github.com/SheerWill007/aureus.git
-cd aureus
+git clone https://github.com/yourusername/kiwi-wallet.git
+cd kiwi-wallet
 
 # Install dependencies
 npm install
-```
 
-### Development
-
-```bash
 # Start development server
 npm run dev
 ```
 
-The app will be available at `http://localhost:5173`
+Visit `http://localhost:5173` to see Kiwi in action! 🥝
 
-## License
-
-MIT
-
-## Author
-
-**SheerWill007**
-- GitHub: [@SheerWill007](https://github.com/SheerWill007)
-- Email: manashpratimbhuyan8134@gmail.com
-
----
-
-© 2024 Aureus. All rights reserved.
-
-
-### Build for Production
+## 📦 Build
 
 ```bash
-# Type check
-npm run type-check
-
-# Build
+# Create production build
 npm run build
 
 # Preview production build
 npm run preview
 ```
 
----
+## 🛠️ Tech Stack
 
-## 📁 Project Structure
+- **Frontend**: React 18 + TypeScript
+- **Styling**: Tailwind CSS + Radix UI
+- **Animations**: Framer Motion
+- **Blockchain**: Ethers.js (Ethereum) + @solana/web3.js (Solana)
+- **Build Tool**: Vite
+- **Routing**: React Router DOM
 
+## 🎨 Theme
+
+Kiwi features a fresh, vibrant color scheme inspired by the kiwi fruit:
+
+- **Primary**: Lime Green (`#84CC16`)
+- **Secondary**: Emerald Green (`#10B981`)
+- **Accent**: Fresh Lime (`#BEF264`)
+
+## 🔑 Key Components
+
+
+- **Landing Page**: Eye-catching hero section with animated kiwi elements
+- **Wallet Setup**: Create new wallet or import existing seed phrase
+- **Dashboard**: Full-featured wallet interface with tabs for assets and activity
+- **Send/Receive**: Simple modals for crypto transfers
+- **Network Selector**: Switch between mainnet and testnet
+- **Settings**: Manage accounts, view keys, and customize preferences
+
+## 🔒 Security Features
+
+- **Local Key Storage**: Private keys never leave your device
+- **Encrypted Storage**: All sensitive data is encrypted
+- **No Tracking**: Zero data collection or analytics
+- **Open Source**: Transparent codebase for community review
+- **Seed Phrase Backup**: 12-word mnemonic for wallet recovery
+
+## 🌐 Supported Networks
+
+### Ethereum
+- Mainnet
+- Sepolia Testnet
+- Goerli Testnet
+
+### Solana
+- Mainnet Beta
+- Devnet
+- Testnet
+
+## 📝 Environment Variables
+
+Create a `.env` file in the root directory:
+
+```env
+VITE_INFURA_API_KEY=your_infura_key_here
+VITE_ALCHEMY_API_KEY=your_alchemy_key_here
 ```
-aureus/
-├── public/
-│   └── LogoWallets/          # Token logos (ETH, SOL, etc.)
-├── src/
-│   ├── components/
-│   │   ├── ui/               # shadcn/ui components
-│   │   ├── scripts/          # Blockchain interaction
-│   │   ├── Dashboard.tsx     # Main wallet interface
-│   │   ├── Landing.tsx       # Homepage
-│   │   ├── SetupWallet.tsx   # Wallet creation/import
-│   │   ├── SendCrypto.tsx    # Send modal
-│   │   └── ReceiveCrypto.tsx # Receive modal
-│   ├── hooks/                # Custom React hooks
-│   │   ├── useWalletBalance.ts
-│   │   └── useNotifications.ts
-│   ├── lib/                  # Utilities
-│   ├── App.tsx               # Router
-│   ├── main.tsx              # Entry point
-│   └── index.css             # Global styles
-├── .env.example              # Environment template
-├── vercel.json               # Vercel config
-├── netlify.toml              # Netlify config
-└── vite.config.ts            # Vite config
-
-```
-
----
-
-## 🎨 Design Philosophy
-
-**Before (Web3 AI-Style)**
-- Complex gradients and animations
-- Glassmorphism effects
-- Full-width responsive layout
-- Multiple custom fonts
-
-**After (MetaMask-Style)** ✅
-- Clean, flat design
-- Fixed 448px width (mobile-first)
-- Orange accent color (#F97316)
-- System fonts for performance
-- Familiar, professional interface
-
-See [DESIGN_COMPARISON.md](./DESIGN_COMPARISON.md) for detailed before/after comparison.
-
----
-
-## 📚 Documentation
-
-- **[README.md](./README.md)** - This file
-- **[DEPLOYMENT.md](./DEPLOYMENT.md)** - Comprehensive deployment guide
-- **[QUICKSTART.md](./QUICKSTART.md)** - Developer quick start
-- **[DESIGN_COMPARISON.md](./DESIGN_COMPARISON.md)** - Visual before/after
-- **[REDESIGN_SUMMARY.md](./REDESIGN_SUMMARY.md)** - Complete change log
-- **[PRODUCTION_CHECKLIST.md](./PRODUCTION_CHECKLIST.md)** - Pre-launch checklist
-
----
-
-## 🔐 Security
-
-- **Non-Custodial**: You control your private keys
-- **Client-Side Only**: Keys stored in browser localStorage
-- **No Backend**: No server means no server-side vulnerabilities
-- **Security Headers**: XSS, frame, and content-type protection
-- **Open Source**: Code is transparent and auditable
-
-⚠️ **Warning**: Never share your private keys or seed phrase with anyone!
-
----
 
 ## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
-1. Fork the repository
+1. Fork the project
 2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
 3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
----
+## ⚠️ Disclaimer
 
-## 📝 License
+Kiwi Wallet is provided "as is" without warranty of any kind. Use at your own risk. Always keep your seed phrase secure and never share it with anyone.
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+## 📄 License
 
----
-
-## 👤 Author
-
-**SheerWill007**
-- GitHub: [@SheerWill007](https://github.com/SheerWill007)
-- Email: manashpratimbhuyan8134@gmail.com
-- Twitter: [@KitsuneKode](https://x.com/KitsuneKode)
-
----
+This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## 🙏 Acknowledgments
 
-- Inspired by [MetaMask](https://metamask.io/)
-- UI components from [shadcn/ui](https://ui.shadcn.com/)
-- Icons from [Lucide](https://lucide.dev/)
+- Inspired by MetaMask and modern Web3 wallets
+- Built with love by Amcha
+- Special thanks to the Ethereum and Solana communities
 
----
+## 📬 Contact
 
-## 📊 Stats
-
-- **Version**: 2.0.0 (MetaMask Redesign)
-- **Build Size**: ~500KB (minified + gzipped)
-- **Performance**: 95+ Lighthouse score
-- **Supported Networks**: Ethereum, Solana
-- **Browser Support**: Chrome, Firefox, Safari, Edge
-
----
-
-## 🗺️ Roadmap
-
-- [x] MetaMask-inspired redesign
-- [x] Dark mode support
-- [x] Multi-chain support (ETH/SOL)
-- [ ] Hardware wallet integration
-- [ ] NFT gallery view
-- [ ] Token swap functionality
-- [ ] Transaction history
-- [ ] Address book
-- [ ] Multi-account support
-- [ ] Mobile app
-
----
-
-## 💬 Support
-
-Need help? Have questions?
-
-- **Issues**: [GitHub Issues](https://github.com/SheerWill007/aureus/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/SheerWill007/aureus/discussions)
-- **Email**: manashpratimbhuyan8134@gmail.com
-
----
-
-## ⭐ Show Your Support
-
-Give a ⭐️ if this project helped you!
+- GitHub: [@yourusername](https://github.com/yourusername)
+- Twitter: [@yourusername](https://twitter.com/yourusername)
 
 ---
 
 <div align="center">
-
-**Built with ❤️ by SheerWill007**
-
-© 2024 Aureus. All rights reserved.
-
+  <strong>Made with 💚 and 🥝</strong>
+  <br />
+  <sub>Stay fresh, stay secure</sub>
 </div>

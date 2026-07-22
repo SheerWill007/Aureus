@@ -231,13 +231,11 @@ export default function Component() {
         <div className="max-w-md mx-auto min-h-screen bg-white dark:bg-[#24242A] shadow-2xl">
           
           {/* Header */}
-          <div className="bg-white dark:bg-[#24242A] border-b border-gray-200 dark:border-[#3A3A3F] px-4 py-3">
+          <div className="bg-white dark:bg-[#24242A] border-b border-lime-200 dark:border-lime-900/30 px-4 py-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center">
-                  <svg width="20" height="20" viewBox="0 0 40 40" fill="none">
-                    <path d="M20 2L35 12V28L20 38L5 28V12L20 2Z" fill="white" />
-                  </svg>
+                <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-lime-400 to-green-500 flex items-center justify-center shadow-lg shadow-lime-500/20">
+                  <span className="text-lg">🥝</span>
                 </div>
                 <div>
                   <div className="flex items-center space-x-1">
@@ -259,13 +257,13 @@ export default function Component() {
             </div>
 
             {/* Address Bar */}
-            <div className="mt-3 flex items-center justify-center space-x-2 bg-gray-100 dark:bg-[#1C1C1E] rounded-full px-3 py-2">
+            <div className="mt-3 flex items-center justify-center space-x-2 bg-gradient-to-r from-lime-50 to-green-50 dark:from-lime-900/10 dark:to-green-900/10 border border-lime-200 dark:border-lime-900/30 rounded-full px-3 py-2">
               <span className="text-xs font-mono text-gray-600 dark:text-gray-400">
                 {publicKey ? `${publicKey.slice(0, 6)}...${publicKey.slice(-4)}` : "No wallet"}
               </span>
               <button
                 onClick={copyPublicKey}
-                className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
+                className="text-lime-600 hover:text-lime-700 dark:text-lime-400 dark:hover:text-lime-300 transition-colors"
               >
                 {copiedPublicKey ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
               </button>
@@ -302,21 +300,21 @@ export default function Component() {
             <button
               onClick={() => setSendModalOpen(true)}
               disabled={!selectedCurrency}
-              className="flex-1 flex flex-col items-center justify-center py-3 bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-lg transition-colors"
+              className="flex-1 flex flex-col items-center justify-center py-3 bg-gradient-to-r from-lime-500 to-green-500 hover:from-lime-600 hover:to-green-600 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed text-white rounded-xl transition-all shadow-lg shadow-lime-500/30"
             >
               <ArrowUpRight className="h-5 w-5 mb-1" />
               <span className="text-sm font-medium">Send</span>
             </button>
             <button
               onClick={() => setReceiveModalOpen(true)}
-              className="flex-1 flex flex-col items-center justify-center py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors"
+              className="flex-1 flex flex-col items-center justify-center py-3 bg-gradient-to-r from-lime-500 to-green-500 hover:from-lime-600 hover:to-green-600 text-white rounded-xl transition-all shadow-lg shadow-lime-500/30"
             >
               <ArrowDownLeft className="h-5 w-5 mb-1" />
               <span className="text-sm font-medium">Receive</span>
             </button>
             <button
               onClick={() => alertMessage()}
-              className="flex-1 flex flex-col items-center justify-center py-3 border border-orange-500 text-orange-500 hover:bg-orange-50 dark:hover:bg-[#3A3A3F] rounded-lg transition-colors"
+              className="flex-1 flex flex-col items-center justify-center py-3 border-2 border-lime-500 text-lime-600 dark:text-lime-400 hover:bg-lime-50 dark:hover:bg-lime-900/20 rounded-xl transition-all"
             >
               <svg className="h-5 w-5 mb-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M7 16V4M7 4L3 8M7 4L11 8M17 8V20M17 20L21 16M17 20L13 16" />
@@ -351,13 +349,13 @@ export default function Component() {
           )}
 
           {/* Tabs */}
-          <div className="border-t border-b border-gray-200 dark:border-[#3A3A3F]">
+          <div className="border-t border-b border-lime-200 dark:border-lime-900/30">
             <div className="flex">
               <button
                 onClick={() => setActiveTab("assets")}
                 className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${
                   activeTab === "assets"
-                    ? "text-orange-500 border-b-2 border-orange-500"
+                    ? "text-lime-600 dark:text-lime-400 border-b-2 border-lime-500"
                     : "text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
                 }`}
               >
@@ -367,7 +365,7 @@ export default function Component() {
                 onClick={() => setActiveTab("activity")}
                 className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${
                   activeTab === "activity"
-                    ? "text-orange-500 border-b-2 border-orange-500"
+                    ? "text-lime-600 dark:text-lime-400 border-b-2 border-lime-500"
                     : "text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
                 }`}
               >
@@ -406,7 +404,7 @@ export default function Component() {
               
               <button
                 onClick={() => alertMessage("Import tokens feature coming soon")}
-                className="w-full mt-4 py-3 text-sm text-orange-500 font-medium hover:bg-gray-50 dark:hover:bg-[#3A3A3F] rounded-lg transition-colors"
+                className="w-full mt-4 py-3 text-sm text-lime-600 dark:text-lime-400 font-medium hover:bg-lime-50 dark:hover:bg-lime-900/20 rounded-xl transition-all border-2 border-dashed border-lime-300 dark:border-lime-700"
               >
                 + Import tokens
               </button>

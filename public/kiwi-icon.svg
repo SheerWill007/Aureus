@@ -1,0 +1,23 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Kiwi fruit shape -->
+  <ellipse cx="64" cy="64" rx="50" ry="48" fill="#84CC16"/>
+  
+  <!-- Inner flesh -->
+  <ellipse cx="64" cy="64" rx="38" ry="36" fill="#BEF264"/>
+  
+  <!-- Center circle -->
+  <circle cx="64" cy="64" r="20" fill="#F0FDF4"/>
+  
+  <!-- Seeds -->
+  <circle cx="64" cy="56" r="2" fill="#15803D"/>
+  <circle cx="58" cy="60" r="2" fill="#15803D"/>
+  <circle cx="70" cy="60" r="2" fill="#15803D"/>
+  <circle cx="60" cy="66" r="2" fill="#15803D"/>
+  <circle cx="68" cy="66" r="2" fill="#15803D"/>
+  <circle cx="64" cy="72" r="2" fill="#15803D"/>
+  <circle cx="56" cy="68" r="1.5" fill="#15803D"/>
+  <circle cx="72" cy="68" r="1.5" fill="#15803D"/>
+  
+  <!-- Outer glow -->
+  <ellipse cx="64" cy="64" rx="50" ry="48" fill="none" stroke="#65A30D" stroke-width="4" opacity="0.5"/>
+</svg>
