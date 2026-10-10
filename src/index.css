@@ -2,56 +2,38 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+ * Kiwi — "edge network" theme.
+ * Pure black canvas, hairline borders, monospace body copy, uppercase grotesk
+ * display type and a single acid-lime accent. The app is dark-only, so :root
+ * and .dark carry the same tokens (shadcn components read these).
+ */
 @layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    /* Kiwi Green Primary Colors */
-    --primary: 84 81% 44%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 142 71% 45%;
-    --secondary-foreground: 0 0% 100%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    /* Kiwi accent - bright lime */
-    --accent: 84 81% 44%;
-    --accent-foreground: 0 0% 100%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 84 81% 44%;
-    --radius: 0.75rem;
-    /* Kiwi custom colors */
-    --kiwi-green: 84 81% 44%;
-    --kiwi-dark-green: 142 71% 35%;
-    --kiwi-light: 84 81% 94%;
-  }
-
+  :root,
   .dark {
-    --background: 222 47% 4%;
-    --foreground: 210 40% 98%;
-    --card: 217 33% 9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 217 33% 9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 84 81% 44%;
+    --background: 0 0% 0%;
+    --foreground: 0 0% 92%;
+    --card: 0 0% 4%;
+    --card-foreground: 0 0% 92%;
+    --popover: 0 0% 3%;
+    --popover-foreground: 0 0% 92%;
+    --primary: 73 86% 59%;
     --primary-foreground: 0 0% 0%;
-    --secondary: 142 71% 45%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 84 81% 44%;
+    --secondary: 0 0% 10%;
+    --secondary-foreground: 0 0% 92%;
+    --muted: 0 0% 9%;
+    --muted-foreground: 0 0% 55%;
+    --accent: 0 0% 100%;
     --accent-foreground: 0 0% 0%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 84 81% 44%;
+    --destructive: 0 72% 55%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 18%;
+    --input: 0 0% 22%;
+    --ring: 73 86% 59%;
+    --radius: 0px;
+
+    --kiwi: #c8f03c;
+    color-scheme: dark;
   }
 }
 
@@ -60,49 +42,122 @@
     @apply border-border;
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
-    @apply bg-background text-foreground;
-    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    @apply bg-black text-foreground font-mono antialiased;
+    font-size: 13px;
+    letter-spacing: 0.01em;
   }
 
-  /* Custom Scrollbar - Kiwi themed */
+  ::selection {
+    background: var(--kiwi);
+    color: #000;
+  }
+
   ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
   }
-
   ::-webkit-scrollbar-track {
-    @apply bg-gray-100 dark:bg-[#1C1C1E];
+    background: #000;
   }
-
   ::-webkit-scrollbar-thumb {
-    @apply bg-lime-400 dark:bg-lime-600 rounded-full;
+    background: #333;
   }
-
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-lime-500 dark:bg-lime-500;
+    background: var(--kiwi);
+  }
+
+  select option {
+    background: #0a0a0a;
+    color: #eaeaea;
   }
 }
 
-/* Kiwi custom animations */
-@keyframes kiwi-pulse {
-  0%, 100% {
-    opacity: 1;
+@layer components {
+  /* Uppercase grotesk headline */
+  .display {
+    @apply font-display uppercase font-medium tracking-[0.02em] leading-[1.05] text-white;
   }
-  50% {
-    opacity: 0.7;
+
+  /* Widely-tracked micro label, e.g. "E X A M P L E S" */
+  .label-wide {
+    @apply font-mono uppercase text-[10px] tracking-[0.35em];
+  }
+
+  /* Outlined rectangular button used across the site */
+  .btn-line {
+    @apply inline-flex items-center justify-center gap-2 border border-white/70 bg-transparent px-5 py-2.5
+      font-mono text-[11px] uppercase tracking-[0.2em] text-white transition-colors duration-200
+      hover:bg-white hover:text-black focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-kiwi
+      disabled:pointer-events-none disabled:opacity-40;
+  }
+
+  .btn-kiwi {
+    @apply inline-flex items-center justify-center gap-2 border border-kiwi bg-kiwi px-5 py-2.5
+      font-mono text-[11px] uppercase tracking-[0.2em] text-black transition-colors duration-200
+      hover:bg-transparent hover:text-kiwi focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white
+      disabled:pointer-events-none disabled:border-white/20 disabled:bg-white/10 disabled:text-white/40;
+  }
+
+  /* [ bracketed ] nav button */
+  .btn-bracket {
+    @apply inline-flex items-center border border-white/40 px-2.5 py-1 font-mono text-[10px] lowercase
+      tracking-wider text-white/80 transition-colors hover:border-kiwi hover:text-kiwi;
+  }
+
+  /* Hairline panel */
+  .panel {
+    @apply border border-white/15 bg-black;
+  }
+
+  /* Diagonal hatch strip used on section headers */
+  .hatch {
+    background-image: repeating-linear-gradient(
+      -55deg,
+      currentColor 0 1px,
+      transparent 1px 6px
+    );
+  }
+
+  .field {
+    @apply w-full border border-white/20 bg-black px-3 py-2.5 font-mono text-xs text-white placeholder:text-white/30
+      transition-colors focus:border-kiwi focus:outline-none;
   }
 }
 
-.kiwi-pulse {
-  animation: kiwi-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .mask-fade-y {
+    mask-image: linear-gradient(to bottom, transparent, #000 25%, #000 75%, transparent);
+  }
+  .mask-fade-radial {
+    mask-image: radial-gradient(ellipse at center, #000 30%, transparent 72%);
+  }
 }
 
-/* Kiwi gradient backgrounds */
-.kiwi-gradient {
-  background: linear-gradient(135deg, #84CC16 0%, #10B981 100%);
+/* Perspective floor grid used behind hero graphics */
+.grid-floor {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.16) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.16) 1px, transparent 1px);
+  background-size: 56px 56px;
+  transform: perspective(700px) rotateX(62deg);
+  transform-origin: center top;
 }
 
-.kiwi-gradient-hover {
-  background: linear-gradient(135deg, #65A30D 0%, #059669 100%);
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

@@ -5,8 +5,6 @@ import {
   ArrowDownLeft,
   Copy,
   Check,
-  Settings,
-  ChevronDown,
   Eye,
   EyeOff,
   X,
@@ -20,6 +18,8 @@ import { useNotifications } from "../hooks/useNotifications";
 import { useWalletBalance, MultiWalletKeys } from "../hooks/useWalletBalance";
 import ActivityList from "./ActivityList";
 import NetworkSelector, { type Network } from "./NetworkSelector";
+import { HatchStrip, TopBar } from "./brand";
+import { GridFloor } from "./landing/graphics";
 
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -53,7 +53,6 @@ export default function Component() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [darkMode, setDarkMode] = useState(false);
   const [selectedCurrency, setSelectedCurrency] = useState("");
   const [selectedNetwork, setSelectedNetwork] = useState<Network>({
     id: "eth-mainnet",
@@ -137,19 +136,11 @@ export default function Component() {
     }
   }, [location.state, navigate, addNotification]);
 
-  // Fetch dark mode state and show welcome notification
+  // Auto-dismiss the welcome notification
   useEffect(() => {
-    const isDarkMode = localStorage.getItem("darkMode") !== "false";
-    setDarkMode(isDarkMode);
     const timer = setTimeout(() => setShowWelcome(false), 5000);
     return () => clearTimeout(timer);
   }, []);
-
-  // Dark mode changer
-  useEffect(() => {
-    document.documentElement.classList.toggle("dark", darkMode);
-    localStorage.setItem("darkMode", darkMode.toString());
-  }, [darkMode]);
 
   const copyPublicKey = () => {
     if (!publicKey) return;
@@ -223,286 +214,290 @@ export default function Component() {
     return "0.00";
   };
 
-  return (
-    <div className={`min-h-screen ${darkMode ? "dark" : ""}`}>
-      <div className="bg-gray-50 dark:bg-[#1C1C1E] text-gray-900 dark:text-white transition-colors duration-300">
-        
-        {/* MetaMask-style Container */}
-        <div className="max-w-md mx-auto min-h-screen bg-white dark:bg-[#24242A] shadow-2xl">
-          
-          {/* Header */}
-          <div className="bg-white dark:bg-[#24242A] border-b border-lime-200 dark:border-lime-900/30 px-4 py-3">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-lime-400 to-green-500 flex items-center justify-center shadow-lg shadow-lime-500/20">
-                  <span className="text-lg">🥝</span>
-                </div>
-                <div>
-                  <div className="flex items-center space-x-1">
-                    <span className="text-sm font-medium">{nickname || "Account 1"}</span>
-                    <ChevronDown className="h-3 w-3 text-gray-500" />
-                  </div>
-                  <div className="flex items-center space-x-1">
-                    <div className="w-2 h-2 rounded-full bg-green-500"></div>
-                    <span className="text-xs text-gray-500 capitalize">{selectedNetwork.name}</span>
-                  </div>
-                </div>
-              </div>
-              <button
-                onClick={() => setShowKeysModal(true)}
-                className="p-2 hover:bg-gray-100 dark:hover:bg-[#3A3A3F] rounded-full transition-colors"
-              >
-                <Settings className="h-5 w-5 text-gray-600 dark:text-gray-400" />
-              </button>
-            </div>
+  const tokens = [
+    { name: "Ethereum", symbol: "ETH", balance: balances.eth ?? 0, icon: "/LogoWallets/ethereum.png", value: getTokenValue("ETH") },
+    { name: "Solana", symbol: "SOL", balance: balances.sol ?? 0, icon: "/LogoWallets/Solana_logo.png", value: getTokenValue("SOL") },
+  ];
 
-            {/* Address Bar */}
-            <div className="mt-3 flex items-center justify-center space-x-2 bg-gradient-to-r from-lime-50 to-green-50 dark:from-lime-900/10 dark:to-green-900/10 border border-lime-200 dark:border-lime-900/30 rounded-full px-3 py-2">
-              <span className="text-xs font-mono text-gray-600 dark:text-gray-400">
-                {publicKey ? `${publicKey.slice(0, 6)}...${publicKey.slice(-4)}` : "No wallet"}
+  return (
+    <div className="relative min-h-screen overflow-x-hidden bg-black text-white">
+      <TopBar
+        right={
+          <>
+            <button onClick={() => setShowKeysModal(true)} className="btn-bracket">
+              .keys [show]
+            </button>
+            <button onClick={() => navigate("/")} className="btn-bracket hidden sm:inline-flex">
+              .exit
+            </button>
+          </>
+        }
+      />
+
+      <main className="relative z-10 mx-auto max-w-xl px-4 pb-24 pt-4">
+        <div className="mb-5 flex items-end justify-between">
+          <div>
+            <p className="mb-2 text-[11px] text-white/40">03 / dashboard</p>
+            <h1 className="display text-3xl">{nickname || "Account 1"}</h1>
+          </div>
+          <span className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-white/50">
+            <span className="h-1.5 w-1.5 animate-pulse bg-kiwi" />
+            {selectedNetwork.type}
+          </span>
+        </div>
+
+        {/* ---------- Balance panel ---------- */}
+        <section className="border border-white/40 bg-black">
+          <HatchStrip label={selectedNetwork.name} />
+
+          <div className="flex items-center justify-between gap-3 border-b border-white/15 px-5 py-3">
+            <span className="text-[10px] uppercase tracking-[0.25em] text-white/45">Address</span>
+            <button
+              onClick={copyPublicKey}
+              className="flex min-w-0 items-center gap-2 border border-white/20 px-2.5 py-1 text-[11px] text-white/80 transition-colors hover:border-kiwi hover:text-kiwi"
+            >
+              <span className="truncate">
+                {publicKey ? `${publicKey.slice(0, 6)}…${publicKey.slice(-4)}` : "No wallet"}
               </span>
-              <button
-                onClick={copyPublicKey}
-                className="text-lime-600 hover:text-lime-700 dark:text-lime-400 dark:hover:text-lime-300 transition-colors"
-              >
-                {copiedPublicKey ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
-              </button>
-            </div>
+              {copiedPublicKey ? <Check className="h-3 w-3 shrink-0" /> : <Copy className="h-3 w-3 shrink-0" />}
+            </button>
           </div>
 
-          {/* Balance Section */}
-          <div className="px-4 py-6 text-center bg-gradient-to-b from-white to-gray-50 dark:from-[#24242A] dark:to-[#1C1C1E]">
-            <div className="flex items-center justify-center mb-2">
+          <div className="relative overflow-hidden px-5 pb-10 pt-8 text-center">
+            <GridFloor className="top-[55%] h-[90%] opacity-50" />
+            <div className="relative z-10">
               <button
                 onClick={() => setShowBalance(!showBalance)}
-                className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                className="mx-auto mb-3 flex items-center gap-2 text-[10px] uppercase tracking-[0.25em] text-white/45 transition-colors hover:text-white"
               >
-                {showBalance ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
+                Balance {showBalance ? <Eye className="h-3.5 w-3.5" /> : <EyeOff className="h-3.5 w-3.5" />}
               </button>
+              {selectedCurrency ? (
+                <>
+                  <div className="font-display text-5xl font-medium tracking-tight text-white">
+                    {showBalance ? getTokenBalance(selectedCurrency) : "••••"}
+                    <span className="ml-2 text-2xl text-kiwi">{selectedCurrency}</span>
+                  </div>
+                  <div className="mt-2 text-[12px] text-white/50">
+                    {showBalance ? `≈ $${getTokenValue(selectedCurrency)} USD` : "••••••"}
+                  </div>
+                </>
+              ) : (
+                <div className="text-[11px] text-white/45">Select a token below</div>
+              )}
             </div>
-            
-            {selectedCurrency ? (
-              <>
-                <div className="text-4xl font-bold mb-1">
-                  {showBalance ? `${getTokenBalance(selectedCurrency)} ${selectedCurrency}` : "••••••"}
-                </div>
-                <div className="text-gray-500 text-sm">
-                  {showBalance ? `$${getTokenValue(selectedCurrency)}` : "••••••"}
-                </div>
-              </>
-            ) : (
-              <div className="text-gray-500 text-sm">Select a token below</div>
-            )}
           </div>
 
-          {/* Action Buttons */}
-          <div className="px-4 pb-4 flex gap-3">
-            <button
-              onClick={() => setSendModalOpen(true)}
+          <div className="grid grid-cols-3 border-t border-white/15">
+            <ActionButton
+              label="Send"
+              primary
               disabled={!selectedCurrency}
-              className="flex-1 flex flex-col items-center justify-center py-3 bg-gradient-to-r from-lime-500 to-green-500 hover:from-lime-600 hover:to-green-600 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed text-white rounded-xl transition-all shadow-lg shadow-lime-500/30"
-            >
-              <ArrowUpRight className="h-5 w-5 mb-1" />
-              <span className="text-sm font-medium">Send</span>
-            </button>
-            <button
-              onClick={() => setReceiveModalOpen(true)}
-              className="flex-1 flex flex-col items-center justify-center py-3 bg-gradient-to-r from-lime-500 to-green-500 hover:from-lime-600 hover:to-green-600 text-white rounded-xl transition-all shadow-lg shadow-lime-500/30"
-            >
-              <ArrowDownLeft className="h-5 w-5 mb-1" />
-              <span className="text-sm font-medium">Receive</span>
-            </button>
-            <button
+              onClick={() => setSendModalOpen(true)}
+              icon={<ArrowUpRight className="h-4 w-4" />}
+            />
+            <ActionButton label="Receive" onClick={() => setReceiveModalOpen(true)} icon={<ArrowDownLeft className="h-4 w-4" />} />
+            <ActionButton
+              label="Swap"
               onClick={() => alertMessage()}
-              className="flex-1 flex flex-col items-center justify-center py-3 border-2 border-lime-500 text-lime-600 dark:text-lime-400 hover:bg-lime-50 dark:hover:bg-lime-900/20 rounded-xl transition-all"
-            >
-              <svg className="h-5 w-5 mb-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M7 16V4M7 4L3 8M7 4L11 8M17 8V20M17 20L21 16M17 20L13 16" />
-              </svg>
-              <span className="text-sm font-medium">Swap</span>
-            </button>
-          </div>
-
-          {/* Network Selector */}
-          <div className="px-4 pb-4">
-            <NetworkSelector
-              selectedNetwork={selectedNetwork}
-              onSelectNetwork={(network) => {
-                setSelectedNetwork(network);
-                addNotification("success", `Switched to ${network.name}`);
-              }}
-              onAddNetwork={() => alertMessage("Add custom network feature coming soon")}
+              icon={
+                <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M7 16V4M7 4L3 8M7 4L11 8M17 8V20M17 20L21 16M17 20L13 16" />
+                </svg>
+              }
             />
           </div>
+        </section>
 
-          {/* Airdrop Section - Compact */}
-          {selectedNetwork.type === "testnet" && (
-            <div className="px-4 pb-4">
-              <AirdropPanel
-                publicKey={publicKey}
-                selectedNetwork={selectedNetwork.type}
-                selectedCurrency={selectedCurrency}
-                onSuccess={(msg) => addNotification("success", msg)}
-                onError={(msg) => addNotification("error", msg)}
-              />
-            </div>
-          )}
+        {/* ---------- Network ---------- */}
+        <div className="mt-4">
+          <NetworkSelector
+            selectedNetwork={selectedNetwork}
+            onSelectNetwork={(network) => {
+              setSelectedNetwork(network);
+              addNotification("success", `Switched to ${network.name}`);
+            }}
+            onAddNetwork={() => alertMessage("Add custom network feature coming soon")}
+          />
+        </div>
 
-          {/* Tabs */}
-          <div className="border-t border-b border-lime-200 dark:border-lime-900/30">
-            <div className="flex">
+        {selectedNetwork.type === "testnet" && (
+          <div className="mt-4">
+            <AirdropPanel
+              publicKey={publicKey}
+              selectedNetwork={selectedNetwork.type}
+              selectedCurrency={selectedCurrency}
+              onSuccess={(msg) => addNotification("success", msg)}
+              onError={(msg) => addNotification("error", msg)}
+            />
+          </div>
+        )}
+
+        {/* ---------- Assets / Activity ---------- */}
+        <section className="mt-4 border border-white/25">
+          <div role="tablist" className="flex border-b border-white/15">
+            {(["assets", "activity"] as const).map((tab) => (
               <button
-                onClick={() => setActiveTab("assets")}
-                className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${
-                  activeTab === "assets"
-                    ? "text-lime-600 dark:text-lime-400 border-b-2 border-lime-500"
-                    : "text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                key={tab}
+                role="tab"
+                aria-selected={activeTab === tab}
+                onClick={() => setActiveTab(tab)}
+                className={`relative flex-1 py-3 text-[10px] uppercase tracking-[0.35em] transition-colors ${
+                  activeTab === tab ? "text-white" : "text-white/35 hover:text-white/70"
                 }`}
               >
-                Assets
+                {tab}
+                {activeTab === tab && (
+                  <motion.span layoutId="dash-tab" className="absolute inset-x-6 -bottom-px h-px bg-kiwi" />
+                )}
               </button>
-              <button
-                onClick={() => setActiveTab("activity")}
-                className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${
-                  activeTab === "activity"
-                    ? "text-lime-600 dark:text-lime-400 border-b-2 border-lime-500"
-                    : "text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
-                }`}
-              >
-                Activity
-              </button>
-            </div>
+            ))}
           </div>
 
-          {/* Tab Content */}
           {activeTab === "assets" ? (
-            /* Assets List */
-            <div className="px-4 py-2">
-              {[
-                { name: "Ethereum", symbol: "ETH", balance: balances.eth ?? 0, icon: "/LogoWallets/ethereum.png", value: getTokenValue("ETH") },
-                { name: "Solana", symbol: "SOL", balance: balances.sol ?? 0, icon: "/LogoWallets/Solana_logo.png", value: getTokenValue("SOL") },
-              ].map((token) => (
+            <div>
+              {tokens.map((token) => (
                 <button
                   key={token.symbol}
                   onClick={() => handleCurrencyChange(token.symbol)}
-                  className={`w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-[#3A3A3F] transition-colors ${
-                    selectedCurrency === token.symbol ? "bg-gray-100 dark:bg-[#3A3A3F]" : ""
+                  className={`relative flex w-full items-center justify-between border-b border-white/10 px-4 py-3.5 transition-colors hover:bg-white/[0.04] ${
+                    selectedCurrency === token.symbol ? "bg-white/[0.04]" : ""
                   }`}
                 >
-                  <div className="flex items-center space-x-3">
-                    <img src={token.icon} alt={token.name} className="w-8 h-8 rounded-full" />
+                  {selectedCurrency === token.symbol && <span className="absolute inset-y-0 left-0 w-0.5 bg-kiwi" />}
+                  <div className="flex items-center gap-3">
+                    <img src={token.icon} alt="" className="h-8 w-8 rounded-full bg-white/5 object-contain p-0.5" />
                     <div className="text-left">
-                      <div className="text-sm font-medium">{token.balance} {token.symbol}</div>
-                      <div className="text-xs text-gray-500">{token.name}</div>
+                      <div className="text-[12px] text-white">
+                        {token.balance} {token.symbol}
+                      </div>
+                      <div className="text-[10px] uppercase tracking-[0.15em] text-white/40">{token.name}</div>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <div className="text-sm font-medium">${token.value}</div>
-                  </div>
+                  <div className="text-[12px] text-white/80">${token.value}</div>
                 </button>
               ))}
-              
+
               <button
                 onClick={() => alertMessage("Import tokens feature coming soon")}
-                className="w-full mt-4 py-3 text-sm text-lime-600 dark:text-lime-400 font-medium hover:bg-lime-50 dark:hover:bg-lime-900/20 rounded-xl transition-all border-2 border-dashed border-lime-300 dark:border-lime-700"
+                className="m-4 w-[calc(100%-2rem)] border border-dashed border-white/25 py-3 text-[10px] uppercase tracking-[0.3em] text-white/50 transition-colors hover:border-kiwi hover:text-kiwi"
               >
                 + Import tokens
               </button>
             </div>
           ) : (
-            /* Activity List */
             <ActivityList publicKey={publicKey} selectedCurrency={selectedCurrency} />
           )}
+        </section>
+      </main>
 
-        </div>
-        
+      <NotificationContainer notifications={notifications} />
 
-
-        {/* Notification Container */}
-        <NotificationContainer notifications={notifications} />
-
-        {/* Welcome Notification */}
-        <AnimatePresence>
-          {showWelcome && (
-            <motion.div
-              initial={{ opacity: 0, x: 100 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 100 }}
-              className="fixed top-6 right-6 bg-white dark:bg-[#24242A] border border-gray-200 dark:border-[#3A3A3F] rounded-lg shadow-lg p-4 z-50 max-w-sm"
+      {/* Welcome toast */}
+      <AnimatePresence>
+        {showWelcome && (
+          <motion.div
+            initial={{ opacity: 0, x: 40 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 40 }}
+            className="fixed right-4 top-20 z-50 max-w-xs border border-kiwi/60 bg-black p-4 font-mono"
+          >
+            <button
+              className="absolute right-2 top-2 text-white/40 transition-colors hover:text-kiwi"
+              onClick={() => setShowWelcome(false)}
+              aria-label="Close welcome notification"
             >
-              <button
-                className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
-                onClick={() => setShowWelcome(false)}
-                aria-label="Close welcome notification"
-              >
-                <X className="h-4 w-4" />
-              </button>
-              <p className="text-lg font-semibold mb-1">
-                Welcome, {nickname}!
-              </p>
-              <p className="text-sm text-gray-500">
-                Your wallet is ready. Start managing your digital assets securely.
-              </p>
-            </motion.div>
-          )}
-        </AnimatePresence>
-        <AnimatePresence>
-          {/* Send Crypto Modal */}
-          {sendModalOpen && (
-            <SendCrypto
-              privateKey={privateKey}
-              selectedCurrency={selectedCurrency}
-              setShowCompletedNotification={setShowCompletedNotification}
-              publicKey={publicKey}
-              isSubmitting={isSubmitting}
-              setSendModalOpen={setSendModalOpen}
-              setIsSubmitting={setIsSubmitting}
-            />
-          )}
-        </AnimatePresence>
-        <AnimatePresence>
-          {showCompletedNotification && (
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 50 }}
-              className="fixed bottom-6 right-6 bg-white dark:bg-[#24242A] border border-green-500 rounded-lg shadow-lg p-4 z-50"
-            >
-              <p className="text-lg font-semibold text-green-500 mb-1">
-                Transaction Completed
-              </p>
-              <p className="text-sm text-gray-500">
-                Your transaction has been processed successfully.
-              </p>
-            </motion.div>
-          )}
-        </AnimatePresence>
-        <AnimatePresence>
-          {receiveModalOpen && (
-            <>
-              <ReceiveCrypto
-                publicKey={publicKey}
-                copiedPublicKey={copiedPublicKey}
-                copyPublicKey={copyPublicKey}
-                shareAddress={shareAddress}
-                setReceiveModalOpen={setReceiveModalOpen}
-              />
-            </>
-          )}
-        </AnimatePresence>
-        <AnimatePresence>
-          {showKeysModal && (
-            <ShowKeys
-              classname={""}
-              setShowKeysModal={setShowKeysModal}
-              privateKey={privateKey}
-              publicKey={publicKey}
-              copyPrivateKey={copyPrivateKey}
-              copyPublicKey={copyPublicKey}
-            />
-          )}
-        </AnimatePresence>
-      </div>
+              <X className="h-3.5 w-3.5" />
+            </button>
+            <p className="text-[10px] uppercase tracking-[0.25em] text-kiwi">[ready]</p>
+            <p className="mt-1 text-[12px] text-white">Welcome, {nickname}.</p>
+            <p className="mt-1 text-[10.5px] leading-relaxed text-white/50">
+              Your wallet is live. Keys stay on this device.
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {sendModalOpen && (
+          <SendCrypto
+            privateKey={privateKey}
+            selectedCurrency={selectedCurrency}
+            setShowCompletedNotification={setShowCompletedNotification}
+            publicKey={publicKey}
+            isSubmitting={isSubmitting}
+            setSendModalOpen={setSendModalOpen}
+            setIsSubmitting={setIsSubmitting}
+          />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showCompletedNotification && (
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 40 }}
+            className="fixed bottom-6 right-6 z-50 border border-kiwi bg-black p-4 font-mono"
+          >
+            <p className="text-[10px] uppercase tracking-[0.25em] text-kiwi">[confirmed]</p>
+            <p className="mt-1 text-[12px] text-white">Transaction completed</p>
+            <p className="mt-1 text-[10.5px] text-white/50">Your transaction has been processed successfully.</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {receiveModalOpen && (
+          <ReceiveCrypto
+            publicKey={publicKey}
+            copiedPublicKey={copiedPublicKey}
+            copyPublicKey={copyPublicKey}
+            shareAddress={shareAddress}
+            setReceiveModalOpen={setReceiveModalOpen}
+          />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showKeysModal && (
+          <ShowKeys
+            classname={""}
+            setShowKeysModal={setShowKeysModal}
+            privateKey={privateKey}
+            publicKey={publicKey}
+            copyPrivateKey={copyPrivateKey}
+            copyPublicKey={copyPublicKey}
+          />
+        )}
+      </AnimatePresence>
     </div>
+  );
+}
+
+function ActionButton({
+  label,
+  icon,
+  onClick,
+  primary = false,
+  disabled = false,
+}: {
+  label: string;
+  icon: React.ReactNode;
+  onClick: () => void;
+  primary?: boolean;
+  disabled?: boolean;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      className={`flex flex-col items-center justify-center gap-1.5 border-r border-white/15 py-4 text-[10px] uppercase tracking-[0.25em] transition-colors last:border-r-0 disabled:cursor-not-allowed disabled:opacity-35 ${
+        primary ? "bg-kiwi text-black hover:bg-white" : "text-white hover:bg-white hover:text-black"
+      }`}
+    >
+      {icon}
+      {label}
+    </button>
   );
 }

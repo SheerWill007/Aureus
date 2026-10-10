@@ -1,9 +1,9 @@
-import { motion, AnimatePresence } from "framer-motion";
-import { Landmark, X } from "lucide-react";
+import { Landmark } from "lucide-react";
 import { useEffect, useState } from "react";
 import { SendSol } from "./scripts/sendSol.ts";
 import { useToast } from "./ui/use-toast.ts";
 import { sendEth } from "./scripts/sendEth.ts";
+import { FieldLabel, ModalShell } from "./brand";
 
 type SendCryptoProps = {
   privateKey: string;
@@ -82,145 +82,93 @@ const SendCrypto = ({
   }, [transactionSignature]);
 
   return (
-    <>
-      <AnimatePresence>
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+    <ModalShell title={`Send ${selectedCurrency}`} onClose={() => setSendModalOpen(false)}>
+      <form className="space-y-4">
+        <div>
+          <FieldLabel>Sending from</FieldLabel>
+          <div className="truncate border border-white/15 bg-white/[0.03] px-3 py-2.5 text-[11px] text-white/70">
+            {publicKey}
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <FieldLabel htmlFor="currency">Currency</FieldLabel>
+            <select id="currency" className="field">
+              <option>ETH</option>
+              <option>BTC</option>
+              <option>SOL</option>
+            </select>
+          </div>
+          <div>
+            <FieldLabel htmlFor="network">Network</FieldLabel>
+            <select id="network" className="field">
+              <option>MainNet</option>
+              <option>TestNet</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <FieldLabel htmlFor="recipient">Send to</FieldLabel>
+          <input
+            id="recipient"
+            type="text"
+            placeholder="Recipient address"
+            className="field"
+            onChange={(e) => setRecipient(e.target.value)}
+          />
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <FieldLabel htmlFor="amount">Amount</FieldLabel>
+            <input
+              id="amount"
+              type="number"
+              placeholder="0.00"
+              className="field"
+              onChange={(e) => setAmount(parseFloat(e.target.value))}
+            />
+          </div>
+          <div>
+            <FieldLabel htmlFor="fee">Fee speed</FieldLabel>
+            <select id="fee" className="field">
+              <option>Slow</option>
+              <option>Medium</option>
+              <option>Fast</option>
+            </select>
+          </div>
+        </div>
+        <dl className="space-y-1.5 border-t border-dashed border-white/15 pt-4 text-[11px]">
+          <div className="flex justify-between">
+            <dt className="text-white/45">Transaction cost</dt>
+            <dd>0.001 ETH</dd>
+          </div>
+          <div className="flex justify-between">
+            <dt className="text-white/45">Process in</dt>
+            <dd>~45 seconds</dd>
+          </div>
+        </dl>
+        <button
+          type="submit"
+          className="btn-kiwi h-11 w-full"
+          onClick={(e) => {
+            handleSendSubmit(e);
+            toast({
+              title: "Transaction started",
+              description: "Please wait for the transaction to complete.",
+            });
+          }}
         >
-          <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.9, opacity: 0 }}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md"
-          >
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-semibold">Send</h2>
-              <button
-                onClick={() => setSendModalOpen(false)}
-                className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-              >
-                <X className="h-6 w-6" />
-              </button>
-            </div>
-            <form>
-              <div className="mb-4">
-                <label className="block text-sm font-medium mb-1">
-                  Sending from
-                </label>
-                <div className="flex justify-between items-center bg-gray-100 dark:bg-gray-700 rounded overflow-hidden p-2">
-                  <span>{publicKey}</span>
-                </div>
-              </div>
-              <div className="mb-4">
-                <label
-                  htmlFor="currency"
-                  className="block text-sm font-medium mb-1"
-                >
-                  Currency
-                </label>
-                <select
-                  id="currency"
-                  className="w-full bg-gray-100 dark:bg-gray-700 rounded p-2"
-                >
-                  <option>ETH</option>
-                  <option>BTC</option>
-                  <option>SOL</option>
-                </select>
-              </div>
-              <div className="mb-4">
-                <label
-                  htmlFor="network"
-                  className="block text-sm font-medium mb-1"
-                >
-                  Network
-                </label>
-                <select
-                  id="network"
-                  className="w-full bg-gray-100 dark:bg-gray-700 rounded p-2"
-                >
-                  <option>MainNet</option>
-                  <option>TestNet</option>
-                </select>
-              </div>
-              <div className="mb-4">
-                <label
-                  htmlFor="recipient"
-                  className="block text-sm font-medium mb-1"
-                >
-                  Send to
-                </label>
-                <input
-                  id="recipient"
-                  type="text"
-                  placeholder="Enter recipient address"
-                  className="w-full bg-gray-100 dark:bg-gray-700 rounded p-2"
-                  onChange={(e) => setRecipient(e.target.value)}
-                />
-              </div>
-              <div className="mb-4">
-                <label
-                  htmlFor="amount"
-                  className="block text-sm font-medium mb-1"
-                >
-                  Amount
-                </label>
-                <input
-                  id="amount"
-                  type="number"
-                  placeholder="0"
-                  className="w-full bg-gray-100 dark:bg-gray-700 rounded p-2"
-                  onChange={(e) => setAmount(parseFloat(e.target.value))}
-                />
-              </div>
-              <div className="mb-4">
-                <label htmlFor="fee" className="block text-sm font-medium mb-1">
-                  Transaction Fee
-                </label>
-                <select
-                  id="fee"
-                  className="w-full bg-gray-100 dark:bg-gray-700 rounded p-2"
-                >
-                  <option>Slow</option>
-                  <option>Medium</option>
-                  <option>Fast</option>
-                </select>
-              </div>
-              <div className="flex justify-between items-center text-sm mb-4">
-                <span>Transaction cost</span>
-                <span>0.001 ETH</span>
-              </div>
-              <div className="flex justify-between items-center text-sm mb-4">
-                <span>Process in</span>
-                <span>45 seconds</span>
-              </div>
-              <button
-                type="submit"
-                className="w-full bg-amber-500 text-white rounded-full py-2 px-4 hover:bg-amber-600 transition-colors duration-300"
-                onClick={(e) => {
-                  handleSendSubmit(e);
-                  toast({
-                    title: "Transaction started",
-                    description: "Please wait for the transaction to complete.",
-                  });
-                }}
-              >
-                {isSubmitting ? (
-                  <div className="flex items-center justify-center">
-                    <Landmark className="animate-spin h-5 w-5 mr-3" />
-                    Processing...
-                  </div>
-                ) : (
-                  "Submit"
-                )}
-              </button>
-            </form>
-          </motion.div>
-        </motion.div>
-      </AnimatePresence>
-    </>
+          {isSubmitting ? (
+            <>
+              <Landmark className="h-4 w-4 animate-spin" />
+              Processing…
+            </>
+          ) : (
+            "Sign & send"
+          )}
+        </button>
+      </form>
+    </ModalShell>
   );
 };
 

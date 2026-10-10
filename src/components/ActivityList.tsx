@@ -68,30 +68,30 @@ export default function ActivityList({ publicKey, selectedCurrency }: ActivityLi
   const getStatusIcon = (status: string) => {
     switch (status) {
       case "confirmed":
-        return <CheckCircle className="h-4 w-4 text-green-500" />;
+        return <CheckCircle className="h-4 w-4 text-kiwi" />;
       case "pending":
-        return <Clock className="h-4 w-4 text-yellow-500" />;
+        return <Clock className="h-4 w-4 text-amber-300" />;
       case "failed":
-        return <XCircle className="h-4 w-4 text-red-500" />;
+        return <XCircle className="h-4 w-4 text-red-400" />;
       default:
-        return <AlertCircle className="h-4 w-4 text-gray-500" />;
+        return <AlertCircle className="h-4 w-4 text-white/40" />;
     }
   };
 
   const getTypeIcon = (type: string) => {
     switch (type) {
       case "send":
-        return <ArrowUpRight className="h-5 w-5 text-red-500" />;
+        return <ArrowUpRight className="h-5 w-5 text-red-400" />;
       case "receive":
-        return <ArrowDownLeft className="h-5 w-5 text-green-500" />;
+        return <ArrowDownLeft className="h-5 w-5 text-kiwi" />;
       case "swap":
         return (
-          <svg className="h-5 w-5 text-orange-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <svg className="h-5 w-5 text-white/70" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M7 16V4M7 4L3 8M7 4L11 8M17 8V20M17 20L21 16M17 20L13 16" />
           </svg>
         );
       default:
-        return <AlertCircle className="h-5 w-5 text-gray-500" />;
+        return <AlertCircle className="h-5 w-5 text-white/40" />;
     }
   };
 
@@ -117,7 +117,7 @@ export default function ActivityList({ publicKey, selectedCurrency }: ActivityLi
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
+        <div className="h-6 w-6 animate-spin border border-kiwi border-t-transparent"></div>
       </div>
     );
   }
@@ -125,11 +125,11 @@ export default function ActivityList({ publicKey, selectedCurrency }: ActivityLi
   if (transactions.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-12 px-4">
-        <div className="w-16 h-16 rounded-full bg-gray-100 dark:bg-[#3A3A3F] flex items-center justify-center mb-4">
-          <Clock className="h-8 w-8 text-gray-400" />
+        <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full border border-dashed border-white/30">
+          <Clock className="h-6 w-6 text-white/40" strokeWidth={1.4} />
         </div>
-        <p className="text-gray-500 text-sm text-center">No transactions yet</p>
-        <p className="text-gray-400 text-xs text-center mt-1">
+        <p className="text-center text-[11px] uppercase tracking-[0.2em] text-white/60">No transactions yet</p>
+        <p className="mt-1 text-center text-[10px] text-white/35">
           Your transaction history will appear here
         </p>
       </div>
@@ -142,25 +142,25 @@ export default function ActivityList({ publicKey, selectedCurrency }: ActivityLi
         <motion.button
           key={tx.hash}
           onClick={() => setSelectedTx(tx)}
-          className="w-full flex items-center justify-between p-3 hover:bg-gray-100 dark:hover:bg-[#3A3A3F] transition-colors text-left"
+          className="flex w-full items-center justify-between border-b border-white/10 px-4 py-3 text-left transition-colors hover:bg-white/[0.04]"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           whileHover={{ scale: 1.01 }}
         >
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-full bg-gray-100 dark:bg-[#1C1C1E] flex items-center justify-center">
+            <div className="flex h-9 w-9 items-center justify-center rounded-full border border-white/25">
               {getTypeIcon(tx.type)}
             </div>
             <div>
               <div className="flex items-center space-x-2">
-                <span className="text-sm font-medium capitalize">{tx.type}</span>
+                <span className="text-[11px] uppercase tracking-[0.15em]">{tx.type}</span>
                 {getStatusIcon(tx.status)}
               </div>
-              <span className="text-xs text-gray-500">{formatDate(tx.timestamp)}</span>
+              <span className="text-[10px] text-white/40">{formatDate(tx.timestamp)}</span>
             </div>
           </div>
           <div className="text-right">
-            <div className={`text-sm font-medium ${tx.type === "receive" ? "text-green-500" : "text-gray-900 dark:text-white"}`}>
+            <div className={`text-[12px] ${tx.type === "receive" ? "text-kiwi" : "text-white"}`}>
               {tx.type === "receive" ? "+" : "-"}{tx.amount} {tx.token}
             </div>
           </div>
@@ -175,7 +175,7 @@ export default function ActivityList({ publicKey, selectedCurrency }: ActivityLi
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setSelectedTx(null)}
-            className="fixed inset-0 bg-black/50 flex items-end justify-center z-50 p-0"
+            className="fixed inset-0 z-50 flex items-end justify-center bg-black/80 p-0"
             style={{ margin: 0 }}
           >
             <motion.div
@@ -184,64 +184,64 @@ export default function ActivityList({ publicKey, selectedCurrency }: ActivityLi
               exit={{ y: "100%" }}
               transition={{ type: "spring", damping: 30, stiffness: 300 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-white dark:bg-[#24242A] w-full max-w-md rounded-t-3xl p-6"
+              className="w-full max-w-md border border-b-0 border-white/25 bg-black p-6 font-mono"
             >
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-bold">Transaction Details</h3>
+                <h3 className="font-display text-lg uppercase tracking-wide">Transaction details</h3>
                 <button
                   onClick={() => setSelectedTx(null)}
-                  className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                  className="text-white/50 hover:text-kiwi"
                 >
                   ✕
                 </button>
               </div>
 
               <div className="space-y-4">
-                <div className="flex items-center justify-between py-3 border-b border-gray-200 dark:border-[#3A3A3F]">
-                  <span className="text-sm text-gray-500">Status</span>
+                <div className="flex items-center justify-between py-3 border-b border-dashed border-white/15">
+                  <span className="text-[10px] uppercase tracking-[0.2em] text-white/45">Status</span>
                   <div className="flex items-center space-x-2">
                     {getStatusIcon(selectedTx.status)}
-                    <span className="text-sm font-medium capitalize">{selectedTx.status}</span>
+                    <span className="text-[11px] uppercase tracking-[0.15em]">{selectedTx.status}</span>
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between py-3 border-b border-gray-200 dark:border-[#3A3A3F]">
-                  <span className="text-sm text-gray-500">Amount</span>
-                  <span className="text-sm font-medium">
+                <div className="flex items-center justify-between py-3 border-b border-dashed border-white/15">
+                  <span className="text-[10px] uppercase tracking-[0.2em] text-white/45">Amount</span>
+                  <span className="text-[11px]">
                     {selectedTx.amount} {selectedTx.token}
                   </span>
                 </div>
 
                 {selectedTx.to && (
-                  <div className="flex items-center justify-between py-3 border-b border-gray-200 dark:border-[#3A3A3F]">
-                    <span className="text-sm text-gray-500">To</span>
-                    <span className="text-sm font-mono">{selectedTx.to}</span>
+                  <div className="flex items-center justify-between py-3 border-b border-dashed border-white/15">
+                    <span className="text-[10px] uppercase tracking-[0.2em] text-white/45">To</span>
+                    <span className="text-[11px]">{selectedTx.to}</span>
                   </div>
                 )}
 
                 {selectedTx.from && (
-                  <div className="flex items-center justify-between py-3 border-b border-gray-200 dark:border-[#3A3A3F]">
-                    <span className="text-sm text-gray-500">From</span>
-                    <span className="text-sm font-mono">{selectedTx.from}</span>
+                  <div className="flex items-center justify-between py-3 border-b border-dashed border-white/15">
+                    <span className="text-[10px] uppercase tracking-[0.2em] text-white/45">From</span>
+                    <span className="text-[11px]">{selectedTx.from}</span>
                   </div>
                 )}
 
                 {selectedTx.gasUsed && (
-                  <div className="flex items-center justify-between py-3 border-b border-gray-200 dark:border-[#3A3A3F]">
-                    <span className="text-sm text-gray-500">Network Fee</span>
-                    <span className="text-sm font-medium">{selectedTx.gasUsed} {selectedTx.token}</span>
+                  <div className="flex items-center justify-between py-3 border-b border-dashed border-white/15">
+                    <span className="text-[10px] uppercase tracking-[0.2em] text-white/45">Network Fee</span>
+                    <span className="text-[11px]">{selectedTx.gasUsed} {selectedTx.token}</span>
                   </div>
                 )}
 
                 <div className="flex items-center justify-between py-3">
-                  <span className="text-sm text-gray-500">Transaction Hash</span>
-                  <span className="text-sm font-mono">{selectedTx.hash}</span>
+                  <span className="text-[10px] uppercase tracking-[0.2em] text-white/45">Transaction Hash</span>
+                  <span className="text-[11px]">{selectedTx.hash}</span>
                 </div>
               </div>
 
               <button
                 onClick={() => openExplorer(selectedTx.hash)}
-                className="w-full mt-6 flex items-center justify-center space-x-2 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors"
+                className="btn-kiwi mt-6 w-full"
               >
                 <span>View on Explorer</span>
                 <ExternalLink className="h-4 w-4" />

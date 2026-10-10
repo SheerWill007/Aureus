@@ -1,5 +1,4 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, AlertCircle } from "lucide-react";
 import { Notification } from "../hooks/useNotifications";
 
 interface NotificationContainerProps {
@@ -8,7 +7,7 @@ interface NotificationContainerProps {
 
 export function NotificationContainer({ notifications }: NotificationContainerProps) {
   return (
-    <div className="fixed bottom-4 right-4 z-50 space-y-2">
+    <div className="fixed bottom-4 right-4 z-50 space-y-2" role="status" aria-live="polite">
       <AnimatePresence>
         {notifications.map((notification) => (
           <NotificationItem key={notification.id} {...notification} />
@@ -19,28 +18,23 @@ export function NotificationContainer({ notifications }: NotificationContainerPr
 }
 
 function NotificationItem({ id, type, message }: Notification) {
-  const icons = {
-    success: <Check className="h-6 w-6 text-green-500" />,
-    error: <AlertCircle className="h-6 w-6 text-red-500" />,
-    info: <AlertCircle className="h-6 w-6 text-blue-500" />,
+  const tags = {
+    success: { label: "[OK]", text: "text-kiwi", border: "border-kiwi/70" },
+    error: { label: "[ERR]", text: "text-red-400", border: "border-red-500/70" },
+    info: { label: "[i]", text: "text-white/70", border: "border-white/40" },
   };
-
-  const colors = {
-    success: "bg-green-100 dark:bg-green-800 border-green-500",
-    error: "bg-red-100 dark:bg-red-800 border-red-500",
-    info: "bg-blue-100 dark:bg-blue-800 border-blue-500",
-  };
+  const t = tags[type];
 
   return (
     <motion.div
       key={id}
-      initial={{ opacity: 0, y: 50, scale: 0.3 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.2 } }}
-      className={`flex items-center space-x-2 rounded-lg border-l-4 p-4 shadow-lg ${colors[type]}`}
+      initial={{ opacity: 0, x: 30 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: 30, transition: { duration: 0.15 } }}
+      className={`flex max-w-sm items-start gap-3 border bg-black px-4 py-3 font-mono text-[11px] text-white ${t.border}`}
     >
-      {icons[type]}
-      <span className="text-sm font-medium">{message}</span>
+      <span className={t.text}>{t.label}</span>
+      <span className="leading-relaxed">{message}</span>
     </motion.div>
   );
 }

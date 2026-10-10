@@ -17,11 +17,13 @@ const Notification = ({ message, type, onClose }: NotificationType) => {
 
   return (
     <div
-      className={`fixed top-4 right-4 p-4 rounded-md shadow-md z-300 ${
-        type === "error" ? "bg-red-500" : "bg-green-500"
-      } text-white dark:bg-gray-800 `}
+      role="status"
+      className={`fixed right-4 top-4 z-[300] flex max-w-sm items-start gap-3 border bg-black px-4 py-3 font-mono text-[11px] text-white shadow-[0_20px_60px_-20px_rgba(0,0,0,1)] ${
+        type === "error" ? "border-red-500/70" : "border-kiwi/70"
+      }`}
     >
-      {message}
+      <span className={type === "error" ? "text-red-400" : "text-kiwi"}>{type === "error" ? "[ERR]" : "[OK]"}</span>
+      <span className="leading-relaxed">{message}</span>
     </div>
   );
 };

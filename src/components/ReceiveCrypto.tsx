@@ -1,6 +1,6 @@
-import { motion } from "framer-motion";
 import QRCode from "qrcode.react";
-import { Check, Share2, X, Copy } from "lucide-react";
+import { Check, Share2, Copy } from "lucide-react";
+import { FieldLabel, ModalShell } from "./brand";
 
 type ReceiveCryptoProps = {
   publicKey: string;
@@ -18,57 +18,23 @@ const ReceiveCrypto = ({
   setReceiveModalOpen,
 }: ReceiveCryptoProps) => {
   return (
-    <>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-      >
-        <motion.div
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          exit={{ scale: 0.9, opacity: 0 }}
-          className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md"
-        >
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl font-semibold">Receive Cryptocurrency</h2>
-            <button
-              onClick={() => setReceiveModalOpen(false)}
-              className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-            >
-              <X className="h-6 w-6" />
-            </button>
-          </div>
-          <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-            Share your public key address to receive payments
-          </p>
-          <div className="flex justify-center mb-4">
-            <QRCode value={publicKey} size={200} />
-          </div>
-          <div className="flex items-center justify-between bg-gray-100 dark:bg-gray-700 rounded p-2 mb-4">
-            <span className="text-sm">{publicKey}</span>
-            <button
-              onClick={copyPublicKey}
-              className="text-amber-500 hover:text-amber-600"
-            >
-              {copiedPublicKey ? (
-                <Check className="h-4 w-4" />
-              ) : (
-                <Copy className="h-4 w-4" />
-              )}
-            </button>
-          </div>
-          <button
-            onClick={shareAddress}
-            className="w-full bg-amber-500 text-white rounded-full py-2 px-4 hover:bg-amber-600 transition-colors duration-300 flex items-center justify-center"
-          >
-            <Share2 className="h-5 w-5 mr-2" />
-            Share Address
-          </button>
-        </motion.div>
-      </motion.div>
-    </>
+    <ModalShell title="Receive" onClose={() => setReceiveModalOpen(false)}>
+      <p className="mb-5 text-[11px] text-white/55">Share your public address to receive payments.</p>
+      <div className="mx-auto mb-5 w-fit border border-white/25 bg-white p-3">
+        <QRCode value={publicKey} size={184} bgColor="#ffffff" fgColor="#000000" />
+      </div>
+      <FieldLabel>Address</FieldLabel>
+      <div className="mb-5 flex items-center gap-2 border border-white/20 px-3 py-2.5">
+        <span className="min-w-0 flex-1 break-all text-[11px] text-white">{publicKey}</span>
+        <button onClick={copyPublicKey} className="shrink-0 text-white/60 transition-colors hover:text-kiwi" aria-label="Copy address">
+          {copiedPublicKey ? <Check className="h-4 w-4 text-kiwi" /> : <Copy className="h-4 w-4" />}
+        </button>
+      </div>
+      <button onClick={shareAddress} className="btn-kiwi w-full">
+        <Share2 className="h-3.5 w-3.5" />
+        Share address
+      </button>
+    </ModalShell>
   );
 };
 

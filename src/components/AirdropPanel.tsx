@@ -58,16 +58,16 @@ export function AirdropPanel({
       initial={{ opacity: 0, height: 0 }}
       animate={{ opacity: 1, height: "auto" }}
       exit={{ opacity: 0, height: 0 }}
-      className="mb-8 glass-card p-4 flex flex-wrap items-center gap-4"
+      className="flex flex-wrap items-center gap-3 border border-dashed border-kiwi/50 p-3"
     >
-      <span className="text-sm font-medium text-web3-gold flex items-center">
+      <span className="flex flex-1 items-center text-[10px] uppercase tracking-[0.2em] text-kiwi">
         <CloudDrizzle className="h-4 w-4 mr-2" />
         Devnet Airdrop
       </span>
       <select
         value={airdropAmount}
         onChange={(e) => setAirdropAmount(parseFloat(e.target.value))}
-        className="text-sm bg-white/5 border border-white/10 rounded-lg px-3 py-1 focus:outline-none focus:ring-2 focus:ring-web3-gold"
+        className="border border-white/25 bg-black px-2 py-1.5 text-[11px] text-white focus:border-kiwi focus:outline-none"
         aria-label="Select airdrop amount"
       >
         <option value="0.5">0.5 SOL</option>
@@ -77,7 +77,7 @@ export function AirdropPanel({
       </select>
       <button
         onClick={handleAirdropRequest}
-        className={`px-4 py-2 rounded-lg bg-web3-blue hover:bg-web3-blue/90 font-medium transition-colors flex items-center ${
+        className={`btn-kiwi px-3 py-1.5 ${
           isRequesting ? "opacity-50 cursor-not-allowed" : ""
         }`}
         disabled={isRequesting}
